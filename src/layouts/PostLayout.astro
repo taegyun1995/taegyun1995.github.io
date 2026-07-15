@@ -1,0 +1,90 @@
+---
+import { ArrowLeft, ArrowRight, CalendarDays, Clock3, RefreshCcw } from '@lucide/astro';
+import type { MarkdownHeading } from 'astro';
+
+import TableOfContents from '@/components/TableOfContents.astro';
+import { getCategoryMeta } from '@/config';
+import {
+  formatDate,
+  getPostUrl,
+  getReadingMinutes,
+  type BlogPost,
+} from '@/lib/posts';
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  post: BlogPost;
+  headings: MarkdownHeading[];
+  previous?: BlogPost;
+  next?: BlogPost;
+}
+
+const { post, headings, previous, next } = Astro.props;
+const category = getCategoryMeta(post.data.category);
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  type="article"
+>
+  <article class="article-shell">
+    <header class="article-header page-container">
+      <a class="article-category" href={`/categories/${category.slug}/`}>{post.data.category}</a>
+      <h1>{post.data.title}</h1>
+      <p class="article-description">{post.data.description}</p>
+      <div class="article-meta">
+        <span><CalendarDays size={16} />{formatDate(post.data.publishedAt)}</span>
+        {post.data.updatedAt && <span><RefreshCcw size={15} />{formatDate(post.data.updatedAt)} 수정</span>}
+        <span><Clock3 size={16} />{getReadingMinutes(post)}분 읽기</span>
+      </div>
+    </header>
+
+    <div class="article-grid page-container">
+      <div class="article-main">
+        <div class="prose" data-pagefind-body>
+          <slot />
+        </div>
+
+        <div class="article-tags" aria-label="태그">
+          {post.data.tags.map((tag) => <span>#{tag}</span>)}
+        </div>
+
+        <nav class="post-navigation" aria-label="이전 글과 다음 글">
+          {previous ? (
+            <a href={getPostUrl(previous)}>
+              <span><ArrowLeft size={16} />이전 글</span>
+              <strong>{previous.data.title}</strong>
+            </a>
+          ) : <span />}
+          {next && (
+            <a class="next-post" href={getPostUrl(next)}>
+              <span>다음 글<ArrowRight size={16} /></span>
+              <strong>{next.data.title}</strong>
+            </a>
+          )}
+        </nav>
+      </div>
+
+      <TableOfContents headings={headings} />
+    </div>
+  </article>
+</BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.prose pre').forEach((block) => {
+    if (block.querySelector('.copy-code')) return;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'copy-code';
+    button.textContent = '복사';
+    button.title = '코드 복사';
+    button.addEventListener('click', async () => {
+      const code = block.querySelector('code')?.textContent ?? '';
+      await navigator.clipboard.writeText(code);
+      button.textContent = '완료';
+      window.setTimeout(() => { button.textContent = '복사'; }, 1200);
+    });
+    block.append(button);
+  });
+</script>

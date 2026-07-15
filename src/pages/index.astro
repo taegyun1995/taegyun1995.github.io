@@ -1,0 +1,72 @@
+---
+import { ArrowRight, GitBranch as GithubIcon } from '@lucide/astro';
+
+import PostList from '@/components/PostList.astro';
+import { CATEGORIES, SITE } from '@/config';
+import { getPublishedPosts } from '@/lib/posts';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const posts = await getPublishedPosts();
+const latestPosts = posts.slice(0, 5);
+---
+
+<BaseLayout>
+  <section class="intro-section page-container">
+    <div class="intro-copy">
+      <p class="intro-role">{SITE.role} · Java / Spring</p>
+      <h1>{SITE.title}</h1>
+      <p class="intro-description">
+        기능을 구현한 결과보다 문제를 발견한 과정과 선택의 근거를 기록합니다.
+        조회 성능, 데이터 정합성, 운영 경험을 백엔드 개발자의 관점에서 다룹니다.
+      </p>
+      <div class="intro-actions">
+        <a class="primary-link" href="/posts/">전체 글 보기<ArrowRight size={17} /></a>
+        <a class="secondary-link" href={SITE.github} target="_blank" rel="noreferrer">
+          <GithubIcon size={17} />GitHub
+        </a>
+      </div>
+    </div>
+    <img
+      class="profile-image"
+      src="/images/profile.png"
+      alt="Taegyun Lee GitHub 프로필"
+      width="128"
+      height="128"
+      loading="eager"
+    />
+  </section>
+
+  <section class="content-section page-container" aria-labelledby="latest-posts-title">
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker">Latest</p>
+        <h2 id="latest-posts-title">최근 기록</h2>
+      </div>
+      <a href="/posts/">전체 보기<ArrowRight size={16} /></a>
+    </div>
+    <PostList posts={latestPosts} />
+  </section>
+
+  <section class="category-section page-container" aria-labelledby="category-title">
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker">Topics</p>
+        <h2 id="category-title">카테고리</h2>
+      </div>
+    </div>
+    <div class="category-index">
+      {CATEGORIES.map((category) => {
+        const count = posts.filter((post) => post.data.category === category.name).length;
+        return (
+          <a href={`/categories/${category.slug}/`}>
+            <div>
+              <strong>{category.name}</strong>
+              <p>{category.description}</p>
+            </div>
+            <span>{count}개의 글<ArrowRight size={16} /></span>
+          </a>
+        );
+      })}
+    </div>
+  </section>
+</BaseLayout>

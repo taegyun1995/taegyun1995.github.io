@@ -1,0 +1,99 @@
+---
+import {
+  GitBranch as GithubIcon,
+  Menu,
+  Moon,
+  Search,
+  Sun,
+  SquareTerminal,
+  X,
+} from '@lucide/astro';
+
+import { SITE } from '@/config';
+import SearchDialog from './SearchDialog.astro';
+
+const path = Astro.url.pathname;
+const navigation = [
+  { href: '/posts/', label: '글' },
+  { href: '/categories/', label: '카테고리' },
+  { href: '/about/', label: '소개' },
+];
+---
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" aria-label={`${SITE.title} 홈`}>
+      <span class="brand-mark"><SquareTerminal size={22} /></span>
+      <span>{SITE.title}</span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="주요 메뉴">
+      {navigation.map((item) => (
+        <a
+          href={item.href}
+          class:list={{ active: path.startsWith(item.href) }}
+          aria-current={path.startsWith(item.href) ? 'page' : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="header-actions">
+      <button class="icon-button search-trigger" type="button" aria-label="글 검색" title="글 검색">
+        <Search size={19} />
+      </button>
+      <a
+        class="icon-button desktop-only"
+        href={SITE.github}
+        target="_blank"
+        rel="noreferrer"
+        aria-label="GitHub 프로필"
+        title="GitHub 프로필"
+      >
+        <GithubIcon size={19} />
+      </a>
+      <button class="icon-button theme-toggle" type="button" aria-label="색상 테마 전환" title="색상 테마 전환">
+        <span class="theme-icon theme-icon-moon"><Moon size={19} /></span>
+        <span class="theme-icon theme-icon-sun"><Sun size={19} /></span>
+      </button>
+      <button
+        id="mobile-menu-trigger"
+        class="icon-button mobile-only"
+        type="button"
+        aria-label="메뉴 열기"
+        aria-expanded="false"
+        aria-controls="mobile-navigation"
+      >
+        <span class="menu-icon-open"><Menu size={20} /></span>
+        <span class="menu-icon-close"><X size={20} /></span>
+      </button>
+    </div>
+  </div>
+
+  <nav id="mobile-navigation" class="mobile-nav" aria-label="모바일 메뉴" hidden>
+    {navigation.map((item) => <a href={item.href}>{item.label}</a>)}
+    <a href={SITE.github} target="_blank" rel="noreferrer">GitHub</a>
+  </nav>
+</header>
+
+<SearchDialog />
+
+<script>
+  const themeToggle = document.querySelector<HTMLButtonElement>('.theme-toggle');
+  themeToggle?.addEventListener('click', () => {
+    const nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = nextTheme;
+    localStorage.setItem('theme', nextTheme);
+  });
+
+  const menuTrigger = document.querySelector<HTMLButtonElement>('#mobile-menu-trigger');
+  const mobileNavigation = document.querySelector<HTMLElement>('#mobile-navigation');
+
+  menuTrigger?.addEventListener('click', () => {
+    const willOpen = menuTrigger.getAttribute('aria-expanded') !== 'true';
+    menuTrigger.setAttribute('aria-expanded', String(willOpen));
+    menuTrigger.setAttribute('aria-label', willOpen ? '메뉴 닫기' : '메뉴 열기');
+    if (mobileNavigation) mobileNavigation.hidden = !willOpen;
+  });
+</script>

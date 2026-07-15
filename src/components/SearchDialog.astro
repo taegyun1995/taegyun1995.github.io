@@ -1,0 +1,118 @@
+---
+import { Search, X } from '@lucide/astro';
+
+import { getPublishedPosts, getPostUrl } from '@/lib/posts';
+
+const posts = await getPublishedPosts();
+const searchItems = posts.map((post) => ({
+  title: post.data.title,
+  description: post.data.description,
+  category: post.data.category,
+  tags: post.data.tags,
+  url: getPostUrl(post),
+}));
+const serializedItems = JSON.stringify(searchItems).replace(/</g, '\\u003c');
+---
+
+<dialog id="search-dialog" class="search-dialog" aria-labelledby="search-dialog-title">
+  <div class="search-dialog-header">
+    <div>
+      <p class="dialog-kicker">Search</p>
+      <h2 id="search-dialog-title">글 검색</h2>
+    </div>
+    <button class="icon-button search-close" type="button" aria-label="검색 닫기" title="검색 닫기">
+      <X size={20} />
+    </button>
+  </div>
+
+  <label class="search-field">
+    <Search size={19} aria-hidden="true" />
+    <span class="sr-only">검색어</span>
+    <input id="search-input" type="search" placeholder="제목, 카테고리, 태그 검색" autocomplete="off" />
+  </label>
+
+  <div id="search-results" class="search-results" aria-live="polite">
+    <p class="search-empty">검색어를 입력해 주세요.</p>
+  </div>
+</dialog>
+
+<script id="search-data" type="application/json" is:inline set:html={serializedItems}></script>
+
+<script>
+  type SearchItem = {
+    title: string;
+    description: string;
+    category: string;
+    tags: string[];
+    url: string;
+  };
+
+  const dialog = document.querySelector<HTMLDialogElement>('#search-dialog');
+  const input = document.querySelector<HTMLInputElement>('#search-input');
+  const results = document.querySelector<HTMLElement>('#search-results');
+  const dataElement = document.querySelector<HTMLScriptElement>('#search-data');
+  const items: SearchItem[] = JSON.parse(dataElement?.textContent || '[]');
+
+  const escapeHtml = (value: string) =>
+    value.replace(/[&<>'"]/g, (character) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      "'": '&#39;',
+      '"': '&quot;',
+    })[character] || character);
+
+  const openDialog = () => {
+    dialog?.showModal();
+    window.setTimeout(() => input?.focus(), 0);
+  };
+
+  document.querySelectorAll<HTMLButtonElement>('.search-trigger').forEach((button) => {
+    button.addEventListener('click', openDialog);
+  });
+  document.querySelector<HTMLButtonElement>('.search-close')?.addEventListener('click', () => dialog?.close());
+
+  dialog?.addEventListener('click', (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+      event.preventDefault();
+      openDialog();
+    }
+  });
+
+  input?.addEventListener('input', () => {
+    if (!results) return;
+    const query = input.value.trim().toLocaleLowerCase('ko-KR');
+
+    if (!query) {
+      results.innerHTML = '<p class="search-empty">검색어를 입력해 주세요.</p>';
+      return;
+    }
+
+    const matches = items.filter((item) =>
+      [item.title, item.description, item.category, ...item.tags]
+        .join(' ')
+        .toLocaleLowerCase('ko-KR')
+        .includes(query),
+    );
+
+    if (matches.length === 0) {
+      results.innerHTML = '<p class="search-empty">일치하는 글이 없습니다.</p>';
+      return;
+    }
+
+    results.innerHTML = matches
+      .slice(0, 8)
+      .map((item) => `
+        <a class="search-result" href="${escapeHtml(item.url)}">
+          <span class="search-result-category">${escapeHtml(item.category)}</span>
+          <strong>${escapeHtml(item.title)}</strong>
+          <span>${escapeHtml(item.description)}</span>
+        </a>
+      `)
+      .join('');
+  });
+</script>

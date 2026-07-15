@@ -1,0 +1,47 @@
+---
+import { ArrowUpRight, Clock3 } from '@lucide/astro';
+
+import { getCategoryMeta } from '@/config';
+import {
+  formatDate,
+  getPostUrl,
+  getReadingMinutes,
+  type BlogPost,
+} from '@/lib/posts';
+
+interface Props {
+  posts: BlogPost[];
+  emptyMessage?: string;
+}
+
+const { posts, emptyMessage = '아직 작성된 글이 없습니다.' } = Astro.props;
+---
+
+{posts.length > 0 ? (
+  <div class="post-list">
+    {posts.map((post) => {
+      const category = getCategoryMeta(post.data.category);
+      return (
+        <article class="post-row">
+          <div class="post-row-meta">
+            <a class="category-link" href={`/categories/${category.slug}/`}>{post.data.category}</a>
+            <span>{formatDate(post.data.publishedAt)}</span>
+            <span class="reading-time"><Clock3 size={14} />{getReadingMinutes(post)}분</span>
+          </div>
+          <h2><a href={getPostUrl(post)}>{post.data.title}</a></h2>
+          <p>{post.data.description}</p>
+          <div class="post-row-footer">
+            <div class="tag-list" aria-label="태그">
+              {post.data.tags.slice(0, 4).map((tag) => <span>#{tag}</span>)}
+            </div>
+            <a class="read-link" href={getPostUrl(post)} aria-label={`${post.data.title} 읽기`}>
+              읽기 <ArrowUpRight size={16} />
+            </a>
+          </div>
+        </article>
+      );
+    })}
+  </div>
+) : (
+  <p class="empty-state">{emptyMessage}</p>
+)}

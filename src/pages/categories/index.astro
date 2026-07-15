@@ -1,0 +1,36 @@
+---
+import { ArrowRight } from '@lucide/astro';
+
+import PostList from '@/components/PostList.astro';
+import { CATEGORIES } from '@/config';
+import { getPublishedPosts } from '@/lib/posts';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const posts = await getPublishedPosts();
+---
+
+<BaseLayout title="카테고리" description="관심 주제별로 기술 블로그 글을 찾아볼 수 있습니다.">
+  <header class="page-header page-container">
+    <p class="section-kicker">Topics</p>
+    <h1>카테고리</h1>
+    <p>프로젝트에서 출발한 구현 경험과 그 근거가 되는 지식을 함께 정리합니다.</p>
+  </header>
+
+  <div class="categories-page page-container">
+    {CATEGORIES.map((category) => {
+      const categoryPosts = posts.filter((post) => post.data.category === category.name);
+      return (
+        <section class="category-group" aria-labelledby={`category-${category.slug}`}>
+          <div class="category-group-heading">
+            <div>
+              <h2 id={`category-${category.slug}`}>{category.name}</h2>
+              <p>{category.description}</p>
+            </div>
+            <a href={`/categories/${category.slug}/`}>{categoryPosts.length}개의 글<ArrowRight size={16} /></a>
+          </div>
+          {categoryPosts.length > 0 && <PostList posts={categoryPosts.slice(0, 3)} />}
+        </section>
+      );
+    })}
+  </div>
+</BaseLayout>

@@ -1,0 +1,27 @@
+---
+import PostList from '@/components/PostList.astro';
+import { CATEGORIES } from '@/config';
+import { getPublishedPosts } from '@/lib/posts';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const posts = await getPublishedPosts();
+---
+
+<BaseLayout title="전체 글" description="백엔드 개발 과정에서 배운 내용을 시간순으로 모았습니다.">
+  <header class="page-header page-container">
+    <p class="section-kicker">Archive</p>
+    <h1>전체 글</h1>
+    <p>구현, 문제 해결, CS 공부와 개발 회고를 시간순으로 모았습니다.</p>
+  </header>
+
+  <div class="page-container">
+    <nav class="category-tabs" aria-label="글 카테고리">
+      <a class="active" href="/posts/" aria-current="page">전체 <span>{posts.length}</span></a>
+      {CATEGORIES.map((category) => {
+        const count = posts.filter((post) => post.data.category === category.name).length;
+        return <a href={`/categories/${category.slug}/`}>{category.name} <span>{count}</span></a>;
+      })}
+    </nav>
+    <PostList posts={posts} />
+  </div>
+</BaseLayout>

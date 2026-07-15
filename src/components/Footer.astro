@@ -1,0 +1,18 @@
+---
+import { GitBranch as GithubIcon, Rss } from '@lucide/astro';
+
+import { SITE } from '@/config';
+---
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <strong>{SITE.title}</strong>
+      <p>문제를 해결한 과정과 판단의 근거를 기록합니다.</p>
+    </div>
+    <div class="footer-links">
+      <a href={SITE.github} target="_blank" rel="noreferrer"><GithubIcon size={17} />GitHub</a>
+      <a href="/rss.xml"><Rss size={17} />RSS</a>
+    </div>
+  </div>
+</footer>
