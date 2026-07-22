@@ -9,6 +9,7 @@ interface Props {
   description?: string;
   image?: string;
   type?: 'website' | 'article';
+  bodyClass?: string;
 }
 
 const {
@@ -16,6 +17,7 @@ const {
   description = SITE.description,
   image = '/images/profile.png',
   type = 'website',
+  bodyClass,
 } = Astro.props;
 
 const pageTitle = title ? `${title} | ${SITE.title}` : SITE.title;
@@ -55,7 +57,7 @@ const imageUrl = new URL(image, Astro.site);
       })();
     </script>
   </head>
-  <body>
+  <body class={bodyClass}>
     <a class="skip-link" href="#main-content">본문으로 건너뛰기</a>
     <Header />
     <main id="main-content">

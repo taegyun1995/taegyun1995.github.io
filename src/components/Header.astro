@@ -1,6 +1,5 @@
 ---
 import {
-  GitBranch as GithubIcon,
   Menu,
   Moon,
   Search,
@@ -10,14 +9,24 @@ import {
 } from '@lucide/astro';
 
 import { SITE } from '@/config';
+import { getPublishedPosts } from '@/lib/posts';
+import GitHubMark from './icons/GitHubMark.astro';
 import SearchDialog from './SearchDialog.astro';
 
 const path = Astro.url.pathname;
+const hasPosts = (await getPublishedPosts()).length > 0;
 const navigation = [
-  { href: '/posts/', label: '글' },
-  { href: '/categories/', label: '카테고리' },
-  { href: '/about/', label: '소개' },
+  { href: '/', label: '홈' },
+  { href: '/resume/', label: '이력서' },
+  { href: '/portfolio/', label: '포트폴리오' },
+  ...(hasPosts
+    ? [
+        { href: '/posts/', label: '기술 글' },
+        { href: '/categories/', label: '카테고리' },
+      ]
+    : []),
 ];
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 ---
 
 <header class="site-header">
@@ -31,8 +40,8 @@ const navigation = [
       {navigation.map((item) => (
         <a
           href={item.href}
-          class:list={{ active: path.startsWith(item.href) }}
-          aria-current={path.startsWith(item.href) ? 'page' : undefined}
+          class:list={{ active: isActive(item.href) }}
+          aria-current={isActive(item.href) ? 'page' : undefined}
         >
           {item.label}
         </a>
@@ -40,9 +49,11 @@ const navigation = [
     </nav>
 
     <div class="header-actions">
-      <button class="icon-button search-trigger" type="button" aria-label="글 검색" title="글 검색">
-        <Search size={19} />
-      </button>
+      {hasPosts && (
+        <button class="icon-button search-trigger" type="button" aria-label="글 검색" title="글 검색">
+          <Search size={19} />
+        </button>
+      )}
       <a
         class="icon-button desktop-only"
         href={SITE.github}
@@ -51,7 +62,7 @@ const navigation = [
         aria-label="GitHub 프로필"
         title="GitHub 프로필"
       >
-        <GithubIcon size={19} />
+        <GitHubMark size={19} />
       </a>
       <button class="icon-button theme-toggle" type="button" aria-label="색상 테마 전환" title="색상 테마 전환">
         <span class="theme-icon theme-icon-moon"><Moon size={19} /></span>
@@ -73,11 +84,13 @@ const navigation = [
 
   <nav id="mobile-navigation" class="mobile-nav" aria-label="모바일 메뉴" hidden>
     {navigation.map((item) => <a href={item.href}>{item.label}</a>)}
-    <a href={SITE.github} target="_blank" rel="noreferrer">GitHub</a>
+    <a class="github-link" href={SITE.github} target="_blank" rel="noreferrer">
+      <GitHubMark size={18} />GitHub
+    </a>
   </nav>
 </header>
 
-<SearchDialog />
+{hasPosts && <SearchDialog />}
 
 <script>
   const themeToggle = document.querySelector<HTMLButtonElement>('.theme-toggle');

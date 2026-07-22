@@ -1,0 +1,168 @@
+---
+import { PORTFOLIO } from '@/data/portfolio';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const portfolioNavigation = [
+  ...PORTFOLIO.cases.map((item) => ({
+    href: `#${item.id}`,
+    number: item.number,
+    label: item.navLabel,
+  })),
+  { href: '#additional-work', number: '+', label: '추가 경험' },
+];
+---
+
+<BaseLayout
+  title="이태균 포트폴리오"
+  description="백엔드 개발자 이태균이 운영 서비스의 결제 정합성, 외부 시스템 연동, 조회 성능 문제를 해결한 과정입니다."
+>
+  <header class="portfolio-page-header page-container">
+    <div class="portfolio-page-intro">
+      <p class="section-kicker">Portfolio</p>
+      <h1>백엔드 포트폴리오</h1>
+      <p class="portfolio-page-role">이태균 · 3년차 백엔드 개발자</p>
+      <p>{PORTFOLIO.summary}</p>
+    </div>
+
+    <dl class="portfolio-overview" aria-label="포트폴리오 요약">
+      <div><dt>주요 영역</dt><dd>결제 · 연동 · 성능</dd></div>
+      <div><dt>역할</dt><dd>설계 · 구현 · 테스트</dd></div>
+      <div><dt>대표 사례</dt><dd>{PORTFOLIO.cases.length}개 프로젝트</dd></div>
+      <div><dt>검증 기준</dt><dd>실제 코드와 Git 이력</dd></div>
+    </dl>
+  </header>
+
+  <div class="portfolio-document page-container">
+    <aside class="portfolio-sidebar" aria-label="프로젝트 목차">
+      <p>Projects</p>
+      <nav>
+        {portfolioNavigation.map((item, index) => (
+          <a class:list={{ active: index === 0 }} href={item.href}>
+            <span>{item.number}</span>
+            <strong>{item.label}</strong>
+          </a>
+        ))}
+      </nav>
+    </aside>
+
+    <div class="portfolio-content">
+      <header class="portfolio-content-heading">
+        <div>
+          <p class="section-kicker">Selected Work</p>
+          <h2>대표 기술 경험</h2>
+        </div>
+        <p>운영 환경에서 직접 마주한 문제와 구현 과정, 그 결과를 중심으로 정리했습니다.</p>
+      </header>
+
+      <div class="portfolio-case-list">
+        {PORTFOLIO.cases.map((item) => (
+          <article id={item.id} class="portfolio-case" data-portfolio-section>
+            <header class="portfolio-case-header">
+              <div class="portfolio-case-meta">
+                <span>{item.number}</span>
+                <p>{item.context}</p>
+                <time>{item.period}</time>
+              </div>
+              <h2>{item.title}</h2>
+              <p class="portfolio-case-summary">{item.summary}</p>
+            </header>
+
+            <div class="portfolio-case-body">
+              <section>
+                <h3>문제</h3>
+                <p>{item.problem}</p>
+              </section>
+              <section>
+                <h3>구현과 판단</h3>
+                <ul>
+                  {item.contributions.map((contribution) => <li>{contribution}</li>)}
+                </ul>
+              </section>
+              <section class="portfolio-case-result">
+                <h3>결과</h3>
+                <p>{item.result}</p>
+              </section>
+            </div>
+
+            <div class="portfolio-keywords" aria-label="사용 기술">
+              {item.keywords.map((keyword) => <span>{keyword}</span>)}
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <section
+        id="additional-work"
+        class="portfolio-additional"
+        data-portfolio-section
+        aria-labelledby="additional-work-title"
+      >
+        <header class="portfolio-additional-heading">
+          <div>
+            <p class="section-kicker">Additional Work</p>
+            <h2 id="additional-work-title">추가 기술 경험</h2>
+          </div>
+          <p>대표 사례 외에도 도메인, 다국어, 대용량 처리와 검색 구조를 개선했습니다.</p>
+        </header>
+        <div class="portfolio-additional-list">
+          {PORTFOLIO.additionalWork.map((item) => (
+            <article>
+              <p>{item.context}</p>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+              <div class="portfolio-keywords">
+                {item.keywords.map((keyword) => <span>{keyword}</span>)}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const portfolioSections = Array.from(
+    document.querySelectorAll<HTMLElement>('[data-portfolio-section]'),
+  );
+  const portfolioLinks = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>('.portfolio-sidebar a'),
+  );
+  const portfolioNav = document.querySelector<HTMLElement>('.portfolio-sidebar nav');
+  let activeSectionId = portfolioSections.at(0)?.id;
+
+  const updatePortfolioNavigation = () => {
+    const firstSection = portfolioSections.at(0);
+    const lastSection = portfolioSections.at(-1);
+    if (!firstSection || !lastSection) return;
+
+    const threshold = window.innerWidth <= 760 ? 300 : 220;
+    let currentSection = firstSection;
+
+    if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) {
+      currentSection = lastSection;
+    } else {
+      for (const section of portfolioSections) {
+        if (section.getBoundingClientRect().top <= threshold) currentSection = section;
+      }
+    }
+
+    if (currentSection.id === activeSectionId) return;
+    activeSectionId = currentSection.id;
+
+    const activeLink = portfolioLinks.find(
+      (link) => link.getAttribute('href') === `#${currentSection.id}`,
+    );
+
+    portfolioLinks.forEach((link) => link.classList.toggle('active', link === activeLink));
+
+    if (activeLink && portfolioNav && window.innerWidth <= 760) {
+      const left = activeLink.offsetLeft - (portfolioNav.clientWidth - activeLink.clientWidth) / 2;
+      portfolioNav.scrollTo({ left, behavior: 'smooth' });
+    }
+  };
+
+  window.addEventListener('scroll', updatePortfolioNavigation, { passive: true });
+  window.addEventListener('resize', updatePortfolioNavigation);
+  updatePortfolioNavigation();
+</script>

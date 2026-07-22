@@ -1,72 +1,93 @@
 ---
-import { ArrowRight, GitBranch as GithubIcon } from '@lucide/astro';
+import { ArrowRight } from '@lucide/astro';
 
 import PostList from '@/components/PostList.astro';
-import { CATEGORIES, SITE } from '@/config';
+import { SITE } from '@/config';
+import { RESUME } from '@/data/resume';
 import { getPublishedPosts } from '@/lib/posts';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 
 const posts = await getPublishedPosts();
-const latestPosts = posts.slice(0, 5);
+const latestPosts = posts.slice(0, 3);
 ---
 
-<BaseLayout>
-  <section class="intro-section page-container">
-    <div class="intro-copy">
-      <p class="intro-role">{SITE.role} · Java / Spring</p>
-      <h1>{SITE.title}</h1>
-      <p class="intro-description">
-        기능을 구현한 결과보다 문제를 발견한 과정과 선택의 근거를 기록합니다.
-        조회 성능, 데이터 정합성, 운영 경험을 백엔드 개발자의 관점에서 다룹니다.
-      </p>
+<BaseLayout bodyClass="home-page">
+  <section class="resume-hero page-container">
+    <aside class="resume-hero-career" aria-labelledby="experience-title">
+      <div class="resume-hero-career-heading">
+        <p class="section-kicker">Experience</p>
+        <h2 id="experience-title">경력</h2>
+      </div>
+
+      <div class="resume-hero-career-list">
+        {RESUME.experiences.map((experience) => (
+          <article>
+            <time>{experience.period}</time>
+            <h3>{experience.company}</h3>
+            <p>{experience.organization} · {experience.role}</p>
+          </article>
+        ))}
+      </div>
+
+      <a class="resume-hero-career-link" href="/resume/">상세 이력서<ArrowRight size={15} /></a>
+    </aside>
+
+    <div class="resume-hero-copy">
+      <p class="intro-role">{SITE.role} · {RESUME.experienceLabel}</p>
+      <h1>{RESUME.name}</h1>
+      <p class="resume-hero-description">{RESUME.summary}</p>
       <div class="intro-actions">
-        <a class="primary-link" href="/posts/">전체 글 보기<ArrowRight size={17} /></a>
-        <a class="secondary-link" href={SITE.github} target="_blank" rel="noreferrer">
-          <GithubIcon size={17} />GitHub
-        </a>
+        <a class="primary-link" href="/resume/">이력서<ArrowRight size={17} /></a>
+        <a class="secondary-link" href="/portfolio/">포트폴리오<ArrowRight size={17} /></a>
       </div>
     </div>
-    <img
-      class="profile-image"
-      src="/images/profile.png"
-      alt="Taegyun Lee GitHub 프로필"
-      width="128"
-      height="128"
-      loading="eager"
-    />
+
+    <aside class="resume-hero-profile" aria-label="경력 요약">
+      <img
+        src="/images/profile.png"
+        alt="이태균 GitHub 프로필"
+        width="112"
+        height="112"
+        loading="eager"
+      />
+      <dl>
+        <div><dt>경력</dt><dd>2023.11 - 현재</dd></div>
+        <div><dt>주요 기술</dt><dd>Java · Spring</dd></div>
+        <div><dt>관심 영역</dt><dd>정합성 · 성능 · 운영</dd></div>
+      </dl>
+    </aside>
   </section>
 
-  <section class="content-section page-container" aria-labelledby="latest-posts-title">
-    <div class="section-heading">
-      <div>
-        <p class="section-kicker">Latest</p>
-        <h2 id="latest-posts-title">최근 기록</h2>
-      </div>
-      <a href="/posts/">전체 보기<ArrowRight size={16} /></a>
+  <section class="home-strength-summary page-container" aria-labelledby="strength-title">
+    <div class="home-overview-heading">
+      <p class="section-kicker">Focus</p>
+      <h2 id="strength-title">핵심 역량</h2>
     </div>
-    <PostList posts={latestPosts} />
+
+    <div class="home-strength-list">
+      {RESUME.strengths.map((strength, index) => (
+        <article>
+          <span>{String(index + 1).padStart(2, '0')}</span>
+          <div>
+            <h3>{strength.title}</h3>
+            <p>{strength.description}</p>
+          </div>
+          <small>{strength.detail}</small>
+        </article>
+      ))}
+    </div>
   </section>
 
-  <section class="category-section page-container" aria-labelledby="category-title">
-    <div class="section-heading">
-      <div>
-        <p class="section-kicker">Topics</p>
-        <h2 id="category-title">카테고리</h2>
+  {latestPosts.length > 0 && (
+    <section class="content-section page-container" aria-labelledby="latest-posts-title">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">Writing</p>
+          <h2 id="latest-posts-title">최근 기술 글</h2>
+        </div>
+        <a href="/posts/">전체 보기<ArrowRight size={16} /></a>
       </div>
-    </div>
-    <div class="category-index">
-      {CATEGORIES.map((category) => {
-        const count = posts.filter((post) => post.data.category === category.name).length;
-        return (
-          <a href={`/categories/${category.slug}/`}>
-            <div>
-              <strong>{category.name}</strong>
-              <p>{category.description}</p>
-            </div>
-            <span>{count}개의 글<ArrowRight size={16} /></span>
-          </a>
-        );
-      })}
-    </div>
-  </section>
+      <PostList posts={latestPosts} />
+    </section>
+  )}
 </BaseLayout>
