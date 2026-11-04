@@ -3,9 +3,9 @@ export const RESUME = {
   title: '백엔드 개발자',
   experienceLabel: '3년차',
   summary:
-    'Java와 Spring을 중심으로 운영 서비스의 데이터 정합성, 조회 성능, 비동기 처리 문제를 해결해 왔습니다. 기능 구현에 그치지 않고 실패 시 남는 상태와 운영 환경의 제약까지 함께 고려합니다.',
+    'Java/Spring 기반 B2B 플랫폼에서 PG 결제 정합성, 물류·생산 시스템 연동, 환자 공정 V2 전환을 담당해 왔습니다. 외부 시스템 상태와 내부 업무 흐름이 어긋나지 않도록 데이터와 도메인 경계를 설계하고 검증합니다.',
   resumeSummary:
-    '결제와 외부 시스템이 맞물리는 서비스에서 데이터 정합성과 실패 복구 흐름을 설계해 온 3년차 백엔드 개발자입니다. Java/Spring으로 트랜잭션·동시성·재시도를 다루고, 운영 데이터를 근거로 병목을 개선합니다.',
+    'PG 결제 정합성, 외부 시스템 연동, 환자 공정 모델 전환을 수행해 온 3년차 백엔드 개발자입니다. Java/Spring으로 상태 전이와 동시성, DB 변경을 구현하고 실패 시나리오까지 검증합니다.',
   contacts: [
     {
       label: 'Email',
@@ -77,14 +77,14 @@ export const RESUME = {
       detail: '결제 검증 · 웹훅 · 상태 전이',
     },
     {
-      title: '성능 개선',
-      description: '실행 계획과 측정 결과를 기준으로 병목을 좁혀 갑니다.',
-      detail: '쿼리 · 인덱스 · 배치 처리',
+      title: '외부 시스템 연동',
+      description: '파트너별 API와 상태 규격을 ODS 업무 흐름에 맞게 연결합니다.',
+      detail: 'PortOne · GoodsFlow · MES',
     },
     {
-      title: '운영 안정성',
-      description: '실패 범위와 리소스 경합을 줄이는 구조를 선택합니다.',
-      detail: '비동기 처리 · 격리 · 복구 흐름',
+      title: '도메인 모델링',
+      description: '공정별 생명주기와 API·데이터 경계를 분리합니다.',
+      detail: 'DPAT · Retainer · Refinement · V2',
     },
   ],
   projects: [
