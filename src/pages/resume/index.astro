@@ -221,6 +221,7 @@ const corePrintKeys = [
                         <ul>
                           {project.highlights.map((highlight) => <li>{highlight}</li>)}
                         </ul>
+                        <p class="resume-project-result"><strong>결과</strong>{project.result}</p>
                       </article>
                     ))}
                   </div>
@@ -272,6 +273,7 @@ const corePrintKeys = [
                 <ul>
                   {project.highlights.map((highlight) => <li>{highlight}</li>)}
                 </ul>
+                <p class="resume-project-result"><strong>결과</strong>{project.result}</p>
                 <div class="resume-keywords resume-personal-keywords" aria-label="사용 기술">
                   {project.keywords.map((keyword) => <span>{keyword}</span>)}
                 </div>

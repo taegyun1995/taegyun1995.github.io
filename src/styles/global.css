@@ -2223,6 +2223,25 @@ html[data-theme='dark'] .astro-code span {
   line-height: 1.72;
 }
 
+.resume-company-project > .resume-project-result,
+.resume-personal-project-entry .resume-project-result {
+  margin: 14px 0 0;
+  padding: 10px 12px;
+  border-left: 2px solid var(--accent);
+  background: color-mix(in srgb, var(--accent-soft) 46%, var(--surface));
+  color: var(--text-strong);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.resume-project-result strong {
+  margin-right: 8px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 800;
+}
+
 .resume-additional-contributions {
   margin-top: 24px;
   padding-top: 20px;
@@ -3975,6 +3994,20 @@ html[data-theme='dark'] .astro-code span {
   .resume-company-project li {
     font-size: 10px;
     line-height: 1.4;
+  }
+
+  .resume-company-project > .resume-project-result,
+  .resume-personal-project-entry .resume-project-result {
+    margin-top: 6px;
+    padding: 4px 6px;
+    border-left-width: 1px;
+    background: transparent;
+    font-size: 8.5px;
+    line-height: 1.4;
+  }
+
+  .resume-project-result strong {
+    font-size: 7.5px;
   }
 
   .resume-additional-contributions {

@@ -94,12 +94,14 @@ export const RESUME = {
       title: 'PortOne 국내외 결제 통합 및 정합성 강화',
       context: '위데이터랩 · ODS',
       description:
-        'PortOne EasyPay와 PayPal을 연동하고 외부 결제 상태와 ODS 주문·결제 상태가 어긋나지 않도록 결제 수명 주기와 실패 흐름을 재설계했습니다.',
+        'PG 결제 성공 후 ODS 저장이 실패하거나 중복 웹훅이 동시에 처리되면 상태가 어긋날 수 있었습니다. EasyPay·PayPal을 결제 수명 주기에 통합하고 정합성 처리를 담당했습니다.',
       highlights: [
         'EasyPay V1 클라이언트와 PayPal V2 연동을 결제 도메인에서 분리해 PG별 요청·응답 차이를 매핑 계층에 격리했습니다.',
         '외부 PG 호출과 DB 트랜잭션을 분리하고 금액·통화·결제 소유권 검증 및 실패 시 보상 취소를 구현했습니다.',
         'PayPal 웹훅 서명 검증, EasyPay·PayPal 이벤트 멱등성, 비관적 락과 상태 재검증으로 중복·동시 처리를 방어하고 MDC 추적 정보를 전파했습니다.',
       ],
+      result:
+        'PG별 API 차이를 매핑 경계에 두고, 외부 결제 성공 후 내부 저장 실패와 중복 이벤트에 대한 명시적인 처리 경로를 마련했습니다.',
       keywords: ['PortOne', 'EasyPay', 'PayPal', 'TransactionTemplate', 'JPA Lock', 'Webhook', 'MDC'],
       href: '/portfolio/#payment-consistency',
     },
@@ -109,12 +111,14 @@ export const RESUME = {
       title: 'ODS 외부 시스템 연동 (PG·GoodsFlow·MES)',
       context: '위데이터랩 · ODS',
       description:
-        'PortOne, GoodsFlow, MES를 ODS의 결제·배송·생산 흐름에 연결하고 시스템별 API와 상태 규격을 내부 도메인에 맞게 매핑했습니다.',
+        '결제·출고·생산 상태가 PortOne, GoodsFlow, MES로 나뉘어 있었습니다. 세 시스템을 ODS 업무 흐름에 연결하고 파트너별 상태를 내부 도메인에 반영하는 일을 담당했습니다.',
       highlights: [
         'PortOne EasyPay·PayPal을 결제 흐름에 연결하고 PG별 API 계약을 분리했습니다. 결제 검증·멱등성·실패 처리는 별도 결제 정합성 사례로 정리했습니다.',
         'GoodsFlow 출고·송장·추적 API와 웹훅을 연동하고 배송 이력, 주소 스냅샷, 추적 재시도를 구현했습니다.',
         'MES 생산계획과 상태 콜백을 연동하고 쉘 단위 Stage/Step·PairShell 규격을 적용해 생산 상태를 ODS 공정에 반영했습니다.',
       ],
+      result:
+        '결제·배송·생산 진행 상태를 ODS 운영 흐름에서 이어서 확인할 수 있도록 외부 응답과 콜백의 매핑 경로를 구성했습니다.',
       keywords: ['PortOne', 'GoodsFlow', 'MES', 'WebClient', 'Webhook', 'State Mapping'],
       href: '/portfolio/#external-integrations',
     },
@@ -124,12 +128,14 @@ export const RESUME = {
       title: 'ODS 공정 모델 V2 전환과 도메인 모듈화',
       context: '위데이터랩 · ODS',
       description:
-        '추가 공정을 독립된 생명주기로 다루도록 모델과 API를 전환하고, 레거시 구조를 정리하면서 여러 백엔드 도메인을 모듈러 모놀리스로 이전했습니다.',
+        '추가 공정의 상태 흐름이 BASIC 공정과 달랐고 V1·V2 구조가 함께 남아 있었습니다. V2 생명주기 전환과 도메인별 코드 이전, 미사용 V1 정리를 맡았습니다.',
       highlights: [
         'DPAT·Retainer·Refinement 공정의 요구사항과 상태 흐름을 정리하고 V2 엔티티·API·DB 마이그레이션을 구현했습니다.',
         '접수·보증·치료계획서·쉘 디자인·생산 API에서 공정 유형별 진입 조건과 상태 처리를 분리했습니다.',
         '파일·병원·지역·계약 등 여러 도메인의 경계를 모듈러 모놀리스 패키지로 옮기고 사용하지 않는 V1 API·엔티티·테이블을 정리했습니다.',
       ],
+      result:
+        'DPAT·Retainer·Refinement의 생명주기를 BASIC과 분리하고, 도메인 경계를 코드 구조에 반영하면서 이전이 끝난 V1 구조를 정리했습니다.',
       keywords: ['Domain Modeling', 'Modular Monolith', 'Spring Boot', 'JPA', 'Flyway'],
       href: '/portfolio/#process-modernization',
     },
@@ -139,11 +145,12 @@ export const RESUME = {
       title: '해양 대기질 데이터 조회 성능 개선',
       context: '지오아이티 · 운영 서비스',
       description:
-        '실행 계획과 인덱스를 재설계해 월 단위 조회 시간을 약 460초에서 3.4초로 단축했습니다.',
+        '월평균 12만 건 이상 쌓인 해양 대기질 데이터의 월 단위 조회가 약 460초 걸렸습니다. 결과 범위를 유지하면서 조회 시간을 줄이는 일을 맡았습니다.',
       highlights: [
         '실행 계획에서 Full Table Scan과 날짜 컬럼의 함수 적용으로 인덱스를 활용하지 못하는 원인을 확인했습니다.',
         '날짜 조건과 복합 인덱스 순서를 재설계하고 데이터 가공 책임을 애플리케이션으로 분리해 조회 시간을 99.25% 줄였습니다.',
       ],
+      result: '같은 월 범위 조회를 약 460초에서 3.4초로 단축해 99.25% 개선했습니다.',
       keywords: ['PostgreSQL', 'Explain Plan', 'Composite Index'],
       href: '/portfolio/#query-performance',
     },
@@ -155,11 +162,12 @@ export const RESUME = {
       period: '2023.04 - 2023.10',
       role: '백엔드 파트장',
       description:
-        '검색 조건이 조합되는 북마크 피드에 QueryDSL과 커서 기반 페이지네이션을 적용했습니다.',
+        '북마크 피드에서 여러 검색 조건을 조합하고 무한 스크롤을 지원해야 했습니다. 백엔드 파트장으로 검색과 페이지 조회 흐름을 구현했습니다.',
       highlights: [
         '검색 조건을 독립적인 QueryDSL predicate로 분리해 필요한 조건만 조합하도록 구성했습니다.',
         '정렬 기준과 마지막 조회 값을 커서로 사용해 다음 페이지를 조회하는 API를 구현했습니다.',
       ],
+      result: '검색 조건을 독립적으로 조합하고 커서 기반으로 다음 페이지를 조회할 수 있게 했습니다.',
       keywords: ['QueryDSL', 'Cursor Pagination', 'Spring Data JPA'],
       href: '/portfolio/#additional-work',
     },

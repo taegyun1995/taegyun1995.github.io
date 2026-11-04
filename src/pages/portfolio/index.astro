@@ -69,17 +69,27 @@ const portfolioNavigation = [
 
             <div class="portfolio-case-body">
               <section>
-                <h3>문제</h3>
-                <p>{item.problem}</p>
+                <h3>S · 상황</h3>
+                <p>{item.situation}</p>
               </section>
               <section>
-                <h3>구현과 판단</h3>
+                <h3>T · 목표와 역할</h3>
+                <p>{item.task}</p>
+              </section>
+              <section>
+                <h3>선택과 트레이드오프</h3>
                 <ul>
-                  {item.contributions.map((contribution) => <li>{contribution}</li>)}
+                  {item.decisions.map((decision) => <li>{decision}</li>)}
+                </ul>
+              </section>
+              <section>
+                <h3>A · 실행</h3>
+                <ul>
+                  {item.actions.map((action) => <li>{action}</li>)}
                 </ul>
               </section>
               <section class="portfolio-case-result">
-                <h3>결과</h3>
+                <h3>R · 결과</h3>
                 <p>{item.result}</p>
               </section>
             </div>
