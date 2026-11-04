@@ -4,10 +4,10 @@ import { ArrowRight } from '@lucide/astro';
 import PostList from '@/components/PostList.astro';
 import { SITE } from '@/config';
 import { RESUME } from '@/data/resume';
-import { getPublishedPosts } from '@/lib/posts';
+import { getTechnicalPosts } from '@/lib/posts';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 
-const posts = await getPublishedPosts();
+const posts = await getTechnicalPosts();
 const latestPosts = posts.slice(0, 3);
 ---
 
@@ -39,7 +39,8 @@ const latestPosts = posts.slice(0, 3);
       <div class="intro-actions">
         <a class="primary-link" href="/resume/">이력서<ArrowRight size={17} /></a>
         <a class="secondary-link" href="/portfolio/">포트폴리오<ArrowRight size={17} /></a>
-        <a class="secondary-link" href="/posts/">기술 글·회고<ArrowRight size={17} /></a>
+        <a class="secondary-link" href="/posts/">기술 블로그<ArrowRight size={17} /></a>
+        <a class="secondary-link" href="/retrospectives/">회고<ArrowRight size={17} /></a>
       </div>
     </div>
 
@@ -82,14 +83,14 @@ const latestPosts = posts.slice(0, 3);
   <section class="content-section page-container" aria-labelledby="latest-posts-title">
     <div class="section-heading">
       <div>
-        <p class="section-kicker">Writing & Retrospective</p>
-        <h2 id="latest-posts-title">최근 기록</h2>
+        <p class="section-kicker">Technical Blog</p>
+        <h2 id="latest-posts-title">최근 기술 글</h2>
       </div>
-      <a href="/posts/">전체 보기<ArrowRight size={16} /></a>
+      <a href="/posts/">기술 블로그 보기<ArrowRight size={16} /></a>
     </div>
     <PostList
       posts={latestPosts}
-      emptyMessage="기술 글과 개발 회고를 이곳에 기록할 예정입니다."
+      emptyMessage="기술 블로그에 구현 과정과 문제 해결 기록을 올릴 예정입니다."
     />
   </section>
 </BaseLayout>

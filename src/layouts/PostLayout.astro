@@ -3,9 +3,9 @@ import { ArrowLeft, ArrowRight, CalendarDays, Clock3, RefreshCcw } from '@lucide
 import type { MarkdownHeading } from 'astro';
 
 import TableOfContents from '@/components/TableOfContents.astro';
-import { getCategoryMeta } from '@/config';
 import {
   formatDate,
+  getCategoryUrl,
   getPostUrl,
   getReadingMinutes,
   type BlogPost,
@@ -20,7 +20,6 @@ interface Props {
 }
 
 const { post, headings, previous, next } = Astro.props;
-const category = getCategoryMeta(post.data.category);
 ---
 
 <BaseLayout
@@ -30,7 +29,7 @@ const category = getCategoryMeta(post.data.category);
 >
   <article class="article-shell">
     <header class="article-header page-container">
-      <a class="article-category" href={`/categories/${category.slug}/`}>{post.data.category}</a>
+      <a class="article-category" href={getCategoryUrl(post.data.category)}>{post.data.category}</a>
       <h1>{post.data.title}</h1>
       <p class="article-description">{post.data.description}</p>
       <div class="article-meta">

@@ -1,9 +1,9 @@
 ---
 import { ArrowUpRight, Clock3 } from '@lucide/astro';
 
-import { getCategoryMeta } from '@/config';
 import {
   formatDate,
+  getCategoryUrl,
   getPostUrl,
   getReadingMinutes,
   type BlogPost,
@@ -20,11 +20,10 @@ const { posts, emptyMessage = '아직 작성된 글이 없습니다.' } = Astro.
 {posts.length > 0 ? (
   <div class="post-list">
     {posts.map((post) => {
-      const category = getCategoryMeta(post.data.category);
       return (
         <article class="post-row">
           <div class="post-row-meta">
-            <a class="category-link" href={`/categories/${category.slug}/`}>{post.data.category}</a>
+            <a class="category-link" href={getCategoryUrl(post.data.category)}>{post.data.category}</a>
             <span>{formatDate(post.data.publishedAt)}</span>
             <span class="reading-time"><Clock3 size={14} />{getReadingMinutes(post)}분</span>
           </div>

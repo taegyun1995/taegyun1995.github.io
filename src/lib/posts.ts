@@ -1,4 +1,9 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
+import {
+  getCategoryMeta,
+  RETROSPECTIVE_CATEGORY,
+  type CategoryName,
+} from '@/config';
 
 export type BlogPost = CollectionEntry<'blog'>;
 
@@ -10,8 +15,24 @@ export async function getPublishedPosts() {
   );
 }
 
+export async function getTechnicalPosts() {
+  const posts = await getPublishedPosts();
+  return posts.filter((post) => post.data.category !== RETROSPECTIVE_CATEGORY);
+}
+
+export async function getRetrospectivePosts() {
+  const posts = await getPublishedPosts();
+  return posts.filter((post) => post.data.category === RETROSPECTIVE_CATEGORY);
+}
+
 export function getPostUrl(post: BlogPost) {
-  return `/posts/${post.data.slug}/`;
+  const section = post.data.category === RETROSPECTIVE_CATEGORY ? 'retrospectives' : 'posts';
+  return `/${section}/${post.data.slug}/`;
+}
+
+export function getCategoryUrl(category: CategoryName) {
+  if (category === RETROSPECTIVE_CATEGORY) return '/retrospectives/';
+  return `/categories/${getCategoryMeta(category).slug}/`;
 }
 
 export function formatDate(date: Date) {

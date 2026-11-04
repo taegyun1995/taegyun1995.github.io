@@ -2,12 +2,12 @@
 import type { GetStaticPaths } from 'astro';
 
 import PostList from '@/components/PostList.astro';
-import { CATEGORIES, type CategoryName } from '@/config';
-import { getPublishedPosts } from '@/lib/posts';
+import { TECHNICAL_CATEGORIES, type CategoryName } from '@/config';
+import { getTechnicalPosts } from '@/lib/posts';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 
 export const getStaticPaths = (() =>
-  CATEGORIES.map((category) => ({
+  TECHNICAL_CATEGORIES.map((category) => ({
     params: { slug: category.slug },
     props: { category },
   }))) satisfies GetStaticPaths;
@@ -15,7 +15,7 @@ export const getStaticPaths = (() =>
 const { category } = Astro.props as {
   category: { name: CategoryName; slug: string; description: string };
 };
-const posts = (await getPublishedPosts()).filter((post) => post.data.category === category.name);
+const posts = (await getTechnicalPosts()).filter((post) => post.data.category === category.name);
 ---
 
 <BaseLayout title={category.name} description={category.description}>

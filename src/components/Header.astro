@@ -8,21 +8,24 @@ import {
   X,
 } from '@lucide/astro';
 
-import { SITE } from '@/config';
+import { RETROSPECTIVE_CATEGORY, SITE } from '@/config';
 import { getPublishedPosts } from '@/lib/posts';
 import GitHubMark from './icons/GitHubMark.astro';
 import SearchDialog from './SearchDialog.astro';
 
 const path = Astro.url.pathname;
-const hasPosts = (await getPublishedPosts()).length > 0;
+const posts = await getPublishedPosts();
+const hasPosts = posts.length > 0;
+const hasTechnicalPosts = posts.some((post) => post.data.category !== RETROSPECTIVE_CATEGORY);
 const navigation = [
   { href: '/', label: '홈' },
   { href: '/resume/', label: '이력서' },
   { href: '/portfolio/', label: '포트폴리오' },
-  { href: '/posts/', label: '기록' },
-  ...(hasPosts
+  { href: '/posts/', label: '기술 블로그' },
+  { href: '/retrospectives/', label: '회고' },
+  ...(hasTechnicalPosts
     ? [
-        { href: '/categories/', label: '주제별' },
+        { href: '/categories/', label: '기술 주제' },
       ]
     : []),
 ];

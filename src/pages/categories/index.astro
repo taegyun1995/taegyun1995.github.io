@@ -2,22 +2,22 @@
 import { ArrowRight } from '@lucide/astro';
 
 import PostList from '@/components/PostList.astro';
-import { CATEGORIES } from '@/config';
-import { getPublishedPosts } from '@/lib/posts';
+import { TECHNICAL_CATEGORIES } from '@/config';
+import { getTechnicalPosts } from '@/lib/posts';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 
-const posts = await getPublishedPosts();
+const posts = await getTechnicalPosts();
 ---
 
-<BaseLayout title="주제별 기록" description="기술 글과 개발 회고를 관심 주제별로 찾아볼 수 있습니다.">
+<BaseLayout title="기술 주제" description="기술 블로그 글을 관심 주제별로 찾아볼 수 있습니다.">
   <header class="page-header page-container">
     <p class="section-kicker">Topics</p>
-    <h1>주제별 기록</h1>
-    <p>프로젝트에서 출발한 구현 경험, 공부한 내용과 개발 회고를 주제별로 모았습니다.</p>
+    <h1>기술 주제</h1>
+    <p>프로젝트에서 출발한 구현 경험과 공부한 내용을 주제별로 모았습니다.</p>
   </header>
 
   <div class="categories-page page-container">
-    {CATEGORIES.map((category) => {
+    {TECHNICAL_CATEGORIES.map((category) => {
       const categoryPosts = posts.filter((post) => post.data.category === category.name);
       return (
         <section class="category-group" aria-labelledby={`category-${category.slug}`}>

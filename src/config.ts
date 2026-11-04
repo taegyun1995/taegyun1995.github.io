@@ -17,6 +17,8 @@ export const CATEGORY_NAMES = [
 
 export type CategoryName = (typeof CATEGORY_NAMES)[number];
 
+export const RETROSPECTIVE_CATEGORY = '개발 회고' as const;
+
 export const CATEGORIES: ReadonlyArray<{
   name: CategoryName;
   slug: string;
@@ -48,6 +50,10 @@ export const CATEGORIES: ReadonlyArray<{
     description: '선택과 협업에서 배운 점을 돌아봅니다.',
   },
 ];
+
+export const TECHNICAL_CATEGORIES = CATEGORIES.filter(
+  (category) => category.name !== RETROSPECTIVE_CATEGORY,
+);
 
 export function getCategoryMeta(name: CategoryName) {
   return CATEGORIES.find((category) => category.name === name) ?? CATEGORIES[0];

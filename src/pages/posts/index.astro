@@ -1,27 +1,27 @@
 ---
 import PostList from '@/components/PostList.astro';
-import { CATEGORIES } from '@/config';
-import { getPublishedPosts } from '@/lib/posts';
+import { TECHNICAL_CATEGORIES } from '@/config';
+import { getTechnicalPosts } from '@/lib/posts';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 
-const posts = await getPublishedPosts();
+const posts = await getTechnicalPosts();
 ---
 
-<BaseLayout title="기록" description="백엔드 기술 글과 개발 회고를 시간순으로 모았습니다.">
+<BaseLayout title="기술 블로그" description="백엔드 개발 과정에서 다룬 기술과 문제 해결 기록을 모았습니다.">
   <header class="page-header page-container">
-    <p class="section-kicker">Writing & Retrospective</p>
-    <h1>기술 글과 개발 회고</h1>
-    <p>구현과 문제 해결, 공부한 내용과 일하며 배운 점을 기록합니다.</p>
+    <p class="section-kicker">Technical Blog</p>
+    <h1>기술 블로그</h1>
+    <p>구현 과정과 문제 해결, 공부한 기술을 기록합니다.</p>
   </header>
 
   <div class="page-container">
-    <nav class="category-tabs" aria-label="글 카테고리">
+    <nav class="category-tabs" aria-label="기술 주제">
       <a class="active" href="/posts/" aria-current="page">전체 <span>{posts.length}</span></a>
-      {CATEGORIES.map((category) => {
+      {TECHNICAL_CATEGORIES.map((category) => {
         const count = posts.filter((post) => post.data.category === category.name).length;
         return <a href={`/categories/${category.slug}/`}>{category.name} <span>{count}</span></a>;
       })}
     </nav>
-    <PostList posts={posts} emptyMessage="첫 기술 글과 회고를 준비하고 있습니다." />
+    <PostList posts={posts} emptyMessage="첫 기술 글을 준비하고 있습니다." />
   </div>
 </BaseLayout>

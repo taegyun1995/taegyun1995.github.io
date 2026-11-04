@@ -1,0 +1,19 @@
+---
+import PostList from '@/components/PostList.astro';
+import { getRetrospectivePosts } from '@/lib/posts';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const posts = await getRetrospectivePosts();
+---
+
+<BaseLayout title="회고" description="프로젝트와 협업, 개발 과정에서 배운 점을 돌아봅니다.">
+  <header class="page-header page-container">
+    <p class="section-kicker">Retrospective</p>
+    <h1>회고</h1>
+    <p>프로젝트와 협업, 선택의 결과를 돌아보고 다음에 적용할 점을 정리합니다.</p>
+  </header>
+
+  <div class="page-container">
+    <PostList posts={posts} emptyMessage="첫 회고를 준비하고 있습니다." />
+  </div>
+</BaseLayout>
