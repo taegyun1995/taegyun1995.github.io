@@ -1624,20 +1624,21 @@ html[data-theme='dark'] .astro-code span {
   font-weight: 700;
 }
 
-.resume-impact-track {
-  height: 5px;
-  margin-top: 15px;
-  overflow: hidden;
-  border-radius: 99px;
-  background: color-mix(in srgb, var(--accent) 13%, var(--surface));
+.resume-impact-processes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 13px;
 }
 
-.resume-impact-track span {
-  display: block;
-  width: 99.25%;
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, var(--accent), var(--green));
+.resume-impact-processes span {
+  padding: 4px 7px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 650;
 }
 
 .resume-impact-result {
