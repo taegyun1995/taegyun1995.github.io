@@ -54,7 +54,7 @@ const printItems = [
       key: project.printKey,
       kind: '프로젝트',
       title: project.title,
-      description: project.description,
+      description: `${project.situation} ${project.task}`,
       context: `${experience.company} · ${project.period}`,
     })),
     ...experience.contributions.map((contribution) => ({
@@ -69,7 +69,7 @@ const printItems = [
     key: project.printKey,
     kind: '개인 프로젝트',
     title: project.title,
-    description: project.description,
+    description: `${project.situation} ${project.task}`,
     context: project.period,
   })),
   {
@@ -217,11 +217,26 @@ const corePrintKeys = [
                             {project.keywords.map((keyword) => <span>{keyword}</span>)}
                           </div>
                         </div>
-                        <p>{project.description}</p>
-                        <ul>
-                          {project.highlights.map((highlight) => <li>{highlight}</li>)}
-                        </ul>
-                        <p class="resume-project-result"><strong>결과</strong>{project.result}</p>
+                        <div class="resume-star-story" aria-label="STAR 프로젝트 설명">
+                          <div class="resume-star-row">
+                            <div class="resume-star-marker"><strong>S</strong><span>상황</span></div>
+                            <p>{project.situation}</p>
+                          </div>
+                          <div class="resume-star-row">
+                            <div class="resume-star-marker"><strong>T</strong><span>목표·역할</span></div>
+                            <p>{project.task}</p>
+                          </div>
+                          <div class="resume-star-row">
+                            <div class="resume-star-marker"><strong>A</strong><span>실행·판단</span></div>
+                            <ul class="resume-star-actions">
+                              {project.highlights.map((highlight) => <li>{highlight}</li>)}
+                            </ul>
+                          </div>
+                          <div class="resume-star-row">
+                            <div class="resume-star-marker"><strong>R</strong><span>결과</span></div>
+                            <p class="resume-star-result">{project.result}</p>
+                          </div>
+                        </div>
                       </article>
                     ))}
                   </div>
@@ -269,11 +284,26 @@ const corePrintKeys = [
                 <a class="resume-project-link" href={project.href}>
                   <h3>{project.title}<ArrowUpRight size={16} /></h3>
                 </a>
-                <p>{project.description}</p>
-                <ul>
-                  {project.highlights.map((highlight) => <li>{highlight}</li>)}
-                </ul>
-                <p class="resume-project-result"><strong>결과</strong>{project.result}</p>
+                <div class="resume-star-story" aria-label="STAR 프로젝트 설명">
+                  <div class="resume-star-row">
+                    <div class="resume-star-marker"><strong>S</strong><span>상황</span></div>
+                    <p>{project.situation}</p>
+                  </div>
+                  <div class="resume-star-row">
+                    <div class="resume-star-marker"><strong>T</strong><span>목표·역할</span></div>
+                    <p>{project.task}</p>
+                  </div>
+                  <div class="resume-star-row">
+                    <div class="resume-star-marker"><strong>A</strong><span>실행·판단</span></div>
+                    <ul class="resume-star-actions">
+                      {project.highlights.map((highlight) => <li>{highlight}</li>)}
+                    </ul>
+                  </div>
+                  <div class="resume-star-row">
+                    <div class="resume-star-marker"><strong>R</strong><span>결과</span></div>
+                    <p class="resume-star-result">{project.result}</p>
+                  </div>
+                </div>
                 <div class="resume-keywords resume-personal-keywords" aria-label="사용 기술">
                   {project.keywords.map((keyword) => <span>{keyword}</span>)}
                 </div>
