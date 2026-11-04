@@ -39,6 +39,7 @@ const latestPosts = posts.slice(0, 3);
       <div class="intro-actions">
         <a class="primary-link" href="/resume/">이력서<ArrowRight size={17} /></a>
         <a class="secondary-link" href="/portfolio/">포트폴리오<ArrowRight size={17} /></a>
+        <a class="secondary-link" href="/posts/">기술 글·회고<ArrowRight size={17} /></a>
       </div>
     </div>
 
@@ -78,16 +79,17 @@ const latestPosts = posts.slice(0, 3);
     </div>
   </section>
 
-  {latestPosts.length > 0 && (
-    <section class="content-section page-container" aria-labelledby="latest-posts-title">
-      <div class="section-heading">
-        <div>
-          <p class="section-kicker">Writing</p>
-          <h2 id="latest-posts-title">최근 기술 글</h2>
-        </div>
-        <a href="/posts/">전체 보기<ArrowRight size={16} /></a>
+  <section class="content-section page-container" aria-labelledby="latest-posts-title">
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker">Writing & Retrospective</p>
+        <h2 id="latest-posts-title">최근 기록</h2>
       </div>
-      <PostList posts={latestPosts} />
-    </section>
-  )}
+      <a href="/posts/">전체 보기<ArrowRight size={16} /></a>
+    </div>
+    <PostList
+      posts={latestPosts}
+      emptyMessage="기술 글과 개발 회고를 이곳에 기록할 예정입니다."
+    />
+  </section>
 </BaseLayout>

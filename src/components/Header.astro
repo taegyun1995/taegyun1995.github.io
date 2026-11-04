@@ -19,10 +19,10 @@ const navigation = [
   { href: '/', label: '홈' },
   { href: '/resume/', label: '이력서' },
   { href: '/portfolio/', label: '포트폴리오' },
+  { href: '/posts/', label: '기록' },
   ...(hasPosts
     ? [
-        { href: '/posts/', label: '기술 글' },
-        { href: '/categories/', label: '카테고리' },
+        { href: '/categories/', label: '주제별' },
       ]
     : []),
 ];

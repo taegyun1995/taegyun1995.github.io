@@ -1,5 +1,15 @@
 ---
-import { ArrowUpRight, FileText, ListChecks, Printer, Square, X } from '@lucide/astro';
+import {
+  ArrowDown,
+  ArrowUp,
+  ArrowUpRight,
+  FileText,
+  GripVertical,
+  ListChecks,
+  Printer,
+  Square,
+  X,
+} from '@lucide/astro';
 
 import { RESUME } from '@/data/resume';
 import BaseLayout from '@/layouts/BaseLayout.astro';
@@ -11,8 +21,9 @@ const resumeNavigation = [
 ];
 
 const coreProjectTitles = new Set([
-  'PortOne 기반 국내외 결제 시스템 구축',
-  '물류·생산 외부 시스템 인터페이스 구축',
+  'PortOne 국내외 결제 통합 및 정합성 강화',
+  'GoodsFlow·MES 물류·생산 시스템 연동',
+  'ODS 공정 모델 V2 전환과 도메인 모듈화',
   '해양 대기질 데이터 조회 성능 개선',
 ]);
 
@@ -37,6 +48,39 @@ const personalProjectGroups = RESUME.personalProjects.map((project, projectIndex
   printKey: `personal-project-${projectIndex}`,
 }));
 
+const printItems = [
+  ...experienceGroups.flatMap((experience) => [
+    ...experience.projects.map((project) => ({
+      key: project.printKey,
+      kind: '프로젝트',
+      title: project.title,
+      description: project.description,
+      context: `${experience.company} · ${project.period}`,
+    })),
+    ...experience.contributions.map((contribution) => ({
+      key: contribution.printKey,
+      kind: '추가 기여',
+      title: contribution.title,
+      description: contribution.description,
+      context: `${experience.company} · ${experience.period}`,
+    })),
+  ]),
+  ...personalProjectGroups.map((project) => ({
+    key: project.printKey,
+    kind: '개인 프로젝트',
+    title: project.title,
+    description: project.description,
+    context: project.period,
+  })),
+  {
+    key: 'resume-skills',
+    kind: '기술',
+    title: '기술 스택 전체',
+    description: 'Backend · Database · Test / Library · Infra / Delivery',
+    context: '공통',
+  },
+];
+
 const corePrintKeys = [
   ...experienceGroups.flatMap((experience) =>
     experience.projects.filter((project) => project.isCore).map((project) => project.printKey),
@@ -50,32 +94,80 @@ const corePrintKeys = [
   description={`Java와 Spring을 사용하는 ${RESUME.experienceLabel} 백엔드 개발자 ${RESUME.name}의 경력과 기술 경험입니다.`}
 >
   <header class="resume-page-header page-container">
-    <div>
-      <p class="section-kicker">Resume</p>
-      <h1>{RESUME.name}</h1>
-      <p class="resume-page-role">{RESUME.title} · {RESUME.experienceLabel}</p>
-      <ul class="resume-contact-list" aria-label="연락처">
-        {RESUME.contacts.map((contact) => (
-          <li>
-            <span>{contact.label}</span>
-            <a
-              href={contact.href}
-              target={contact.href.startsWith('http') ? '_blank' : undefined}
-              rel={contact.href.startsWith('http') ? 'noreferrer' : undefined}
-            >
-              {contact.value}
-            </a>
-          </li>
-        ))}
-      </ul>
-      <p class="resume-page-summary">{RESUME.resumeSummary}</p>
+    <div class="resume-page-main">
+      <div class="resume-page-intro">
+        <p class="section-kicker">Resume <span>·</span> Backend Engineer</p>
+        <h1>{RESUME.name}</h1>
+        <p class="resume-page-role">{RESUME.title} <span>·</span> {RESUME.experienceLabel}</p>
+        <p class="resume-page-summary">{RESUME.resumeSummary}</p>
+        <ul class="resume-contact-list" aria-label="연락처">
+          {RESUME.contacts.map((contact) => (
+            <li>
+              <span>{contact.label}</span>
+              <a
+                href={contact.href}
+                target={contact.href.startsWith('http') ? '_blank' : undefined}
+                rel={contact.href.startsWith('http') ? 'noreferrer' : undefined}
+              >
+                {contact.value}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <div class="resume-actions">
+          <button class="secondary-link configure-resume-print" type="button">
+            <Printer size={17} />PDF 구성
+          </button>
+        </div>
+      </div>
+
+      <aside class="resume-impact-card" aria-label="대표 성과: 조회 시간을 460초에서 3.4초로 단축">
+        <div class="resume-impact-topline">
+          <span>SELECTED IMPACT</span>
+          <span>2024.04–05</span>
+        </div>
+        <p class="resume-impact-label">월 단위 해양 대기질 데이터 조회</p>
+        <div class="resume-impact-metric">
+          <strong>460<small>초</small></strong>
+          <span aria-hidden="true">→</span>
+          <strong>3.4<small>초</small></strong>
+        </div>
+        <div class="resume-impact-track" aria-hidden="true"><span></span></div>
+        <p class="resume-impact-result">조회 시간 <strong>99.25% 단축</strong></p>
+        <a href="/portfolio/#query-performance">
+          개선 과정 보기 <ArrowUpRight size={15} />
+        </a>
+      </aside>
     </div>
-    <div class="resume-actions">
-      <button class="secondary-link configure-resume-print" type="button">
-        <Printer size={17} />PDF 구성
-      </button>
+
+    <div class="resume-page-focusline" aria-label="주요 전문 분야">
+      <span>FOCUS</span>
+      <ul>
+        <li>결제 데이터 정합성</li>
+        <li>외부 시스템 연동</li>
+        <li>조회 성능 개선</li>
+      </ul>
     </div>
   </header>
+
+  <section class="resume-strengths page-container" aria-labelledby="resume-strengths-title">
+    <div class="resume-strengths-heading">
+      <p>How I work</p>
+      <h2 id="resume-strengths-title">운영의 문제를 구조와 수치로 풀어냅니다.</h2>
+    </div>
+    <div class="resume-strength-list">
+      {RESUME.strengths.map((strength, index) => (
+        <article>
+          <span class="resume-strength-index">0{index + 1}</span>
+          <div>
+            <h3>{strength.title}</h3>
+            <p>{strength.description}</p>
+            <small>{strength.detail}</small>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
 
   <div class="resume-document page-container">
     <aside class="resume-sidebar" aria-label="이력서 목차">
@@ -213,6 +305,11 @@ const corePrintKeys = [
     </div>
   </div>
 
+  <section class="resume-print-document page-container" aria-hidden="true">
+    <h2 class="resume-print-heading">선택 경험</h2>
+    <div class="resume-print-freeform-list" data-resume-print-document></div>
+  </section>
+
   <dialog
     class="resume-print-dialog"
     aria-labelledby="resume-print-dialog-title"
@@ -223,6 +320,7 @@ const corePrintKeys = [
         <div>
           <p class="section-kicker">PDF Builder</p>
           <h2 id="resume-print-dialog-title">PDF 구성</h2>
+          <p>항목을 선택한 뒤 드래그해서 PDF에 표시할 순서를 정하세요.</p>
         </div>
         <button class="icon-button" type="submit" value="cancel" aria-label="닫기" title="닫기">
           <X size={19} />
@@ -244,66 +342,50 @@ const corePrintKeys = [
         <output class="resume-print-count" aria-live="polite">0개 선택</output>
       </div>
 
-      <div class="resume-print-options">
-        {experienceGroups.map((experience) => (
-          <fieldset>
-            <legend>{experience.company}</legend>
-            <div>
-              {experience.projects.map((project) => (
-                <label class="resume-print-option">
-                  <input type="checkbox" name="resume-print-item" value={project.printKey} checked />
-                  <span>
-                    <small>프로젝트</small>
-                    <strong>{project.title}</strong>
-                  </span>
-                </label>
-              ))}
-              {experience.contributions.map((contribution) => (
-                <label class="resume-print-option">
-                  <input
-                    type="checkbox"
-                    name="resume-print-item"
-                    value={contribution.printKey}
-                    checked
-                  />
-                  <span>
-                    <small>추가 기여</small>
-                    <strong>{contribution.title}</strong>
-                    <span class="resume-print-option-description">{contribution.description}</span>
-                  </span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
-        ))}
-
-        <fieldset>
-          <legend>개인 프로젝트</legend>
-          <div>
-            {personalProjectGroups.map((project) => (
-              <label class="resume-print-option">
-                <input type="checkbox" name="resume-print-item" value={project.printKey} checked />
+      <div class="resume-print-options" data-print-options>
+        <ol class="resume-print-option-list" aria-label="PDF 출력 순서">
+          {printItems.map((item) => (
+            <li
+              class="resume-print-option"
+              data-print-key={item.key}
+              data-print-kind={item.kind}
+              data-print-context={item.context}
+              draggable="true"
+            >
+              <span class="resume-print-drag-handle" aria-hidden="true">
+                <GripVertical size={18} />
+              </span>
+              <label>
+                <input type="checkbox" name="resume-print-item" value={item.key} checked />
                 <span>
-                  <small>개인 프로젝트</small>
-                  <strong>{project.context} · {project.title}</strong>
+                  <small>{item.kind} · {item.context}</small>
+                  <strong>{item.title}</strong>
+                  <span class="resume-print-option-description">{item.description}</span>
                 </span>
               </label>
-            ))}
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>공통</legend>
-          <div>
-            <label class="resume-print-option">
-              <input type="checkbox" name="resume-print-item" value="resume-skills" checked />
-              <span>
-                <small>기술</small>
-                <strong>기술 스택 전체</strong>
+              <span class="resume-print-order-controls" aria-label={`${item.title} 순서 변경`}>
+                <button
+                  class="icon-button"
+                  type="button"
+                  data-print-move="up"
+                  aria-label={`${item.title} 위로 이동`}
+                  title="위로 이동"
+                >
+                  <ArrowUp size={15} />
+                </button>
+                <button
+                  class="icon-button"
+                  type="button"
+                  data-print-move="down"
+                  aria-label={`${item.title} 아래로 이동`}
+                  title="아래로 이동"
+                >
+                  <ArrowDown size={15} />
+                </button>
               </span>
-            </label>
-          </div>
-        </fieldset>
+            </li>
+          ))}
+        </ol>
       </div>
 
       <footer class="resume-print-dialog-footer">
@@ -317,32 +399,82 @@ const corePrintKeys = [
 </BaseLayout>
 
 <script>
-  const PRINT_SELECTION_STORAGE_KEY = 'resume-print-selection-v2';
+  const PRINT_BUILDER_STORAGE_KEY = 'resume-print-builder-v3';
+  const LEGACY_PRINT_SELECTION_STORAGE_KEY = 'resume-print-selection-v2';
   const printDialog = document.querySelector<HTMLDialogElement>('.resume-print-dialog');
   const configurePrintButton = document.querySelector<HTMLButtonElement>(
     '.configure-resume-print',
   );
   const printConfirmButton = document.querySelector<HTMLButtonElement>('.resume-print-confirm');
   const printCount = document.querySelector<HTMLOutputElement>('.resume-print-count');
+  const printOptionList = document.querySelector<HTMLOListElement>('.resume-print-option-list');
+  const printDocument = document.querySelector<HTMLElement>('[data-resume-print-document]');
   const printCheckboxes = Array.from(
     document.querySelectorAll<HTMLInputElement>('input[name="resume-print-item"]'),
+  );
+  const printOptionRows = Array.from(
+    document.querySelectorAll<HTMLLIElement>('.resume-print-option'),
   );
   const printPresetButtons = Array.from(
     document.querySelectorAll<HTMLButtonElement>('[data-print-preset]'),
   );
   let printSelectionBeforeDialog: string[] = [];
+  let printOrderBeforeDialog: string[] = [];
+  let draggedPrintOption: HTMLLIElement | null = null;
 
   const getSelectedPrintKeys = () =>
     printCheckboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.value);
+
+  const getPrintOrder = () =>
+    Array.from(printOptionList?.querySelectorAll<HTMLLIElement>('.resume-print-option') ?? []).map(
+      (option) => option.dataset.printKey ?? '',
+    );
+
+  const normalizePrintOrder = (order: string[]) => {
+    const availableKeys = printOptionRows.map((option) => option.dataset.printKey ?? '');
+    const availableKeySet = new Set(availableKeys);
+    const uniqueSavedKeys = order.filter(
+      (key, index) => availableKeySet.has(key) && order.indexOf(key) === index,
+    );
+
+    return [...uniqueSavedKeys, ...availableKeys.filter((key) => !uniqueSavedKeys.includes(key))];
+  };
+
+  const setPrintOrder = (order: string[]) => {
+    if (!printOptionList) return;
+
+    const optionByKey = new Map(
+      printOptionRows.map((option) => [option.dataset.printKey ?? '', option]),
+    );
+    normalizePrintOrder(order).forEach((key) => {
+      const option = optionByKey.get(key);
+      if (option) printOptionList.append(option);
+    });
+  };
+
+  const persistPrintBuilder = () => {
+    localStorage.setItem(
+      PRINT_BUILDER_STORAGE_KEY,
+      JSON.stringify({ selectedKeys: getSelectedPrintKeys(), order: getPrintOrder() }),
+    );
+  };
 
   const updatePrintSelectionState = (persist = true) => {
     const selectedKeys = getSelectedPrintKeys();
     if (printCount) printCount.value = `${selectedKeys.length}개 선택`;
     if (printConfirmButton) printConfirmButton.disabled = selectedKeys.length === 0;
 
-    if (persist) {
-      localStorage.setItem(PRINT_SELECTION_STORAGE_KEY, JSON.stringify(selectedKeys));
-    }
+    const selectedKeySet = new Set(selectedKeys);
+    printOptionRows.forEach((option) => {
+      const isSelected = selectedKeySet.has(option.dataset.printKey ?? '');
+      option.dataset.printSelected = isSelected ? 'true' : 'false';
+      option.draggable = isSelected;
+      option.querySelectorAll<HTMLButtonElement>('[data-print-move]').forEach((button) => {
+        button.disabled = !isSelected;
+      });
+    });
+
+    if (persist) persistPrintBuilder();
   };
 
   const setPrintSelection = (selectedKeys: string[], persist = false) => {
@@ -353,68 +485,66 @@ const corePrintKeys = [
     updatePrintSelectionState(persist);
   };
 
-  const applyPrintSelection = () => {
+  const buildPrintDocument = () => {
+    if (!printDocument) return;
+
     const selectedKeySet = new Set(getSelectedPrintKeys());
     document.documentElement.dataset.printLayout = selectedKeySet.size <= 6 ? 'compact' : 'full';
+    printDocument.replaceChildren();
 
-    document.querySelectorAll<HTMLElement>('[data-print-key]').forEach((element) => {
-      element.dataset.printSelected = selectedKeySet.has(element.dataset.printKey ?? '')
-        ? 'true'
-        : 'false';
-    });
+    getPrintOrder().forEach((printKey) => {
+      if (!selectedKeySet.has(printKey)) return;
 
-    document.querySelectorAll<HTMLElement>('[data-print-company]').forEach((company) => {
-      const projectList = company.querySelector<HTMLElement>('.resume-company-project-list');
-      const contributionList = company.querySelector<HTMLElement>(
-        '.resume-additional-contributions',
-      );
-      const hasSelectedProject = Boolean(
-        projectList?.querySelector('[data-print-selected="true"]'),
-      );
-      const hasSelectedContribution = Boolean(
-        contributionList?.querySelector('[data-print-selected="true"]'),
-      );
+      const source = document.querySelector<HTMLElement>(`[data-print-key="${printKey}"]`);
+      const option = printOptionRows.find((row) => row.dataset.printKey === printKey);
+      if (!source || !option) return;
 
-      if (projectList) {
-        projectList.dataset.printSelected = hasSelectedProject ? 'true' : 'false';
+      const item = document.createElement('article');
+      item.className = 'resume-print-freeform-item';
+
+      const context = document.createElement('p');
+      context.className = 'resume-print-item-context';
+      context.textContent = `${option.dataset.printKind ?? ''} · ${option.dataset.printContext ?? ''}`;
+      item.append(context);
+
+      if (source.matches('.resume-additional-contributions li')) {
+        const contribution = document.createElement('div');
+        contribution.className = 'resume-print-contribution';
+        contribution.append(source.cloneNode(true));
+        item.append(contribution);
+      } else {
+        const content = source.cloneNode(true) as HTMLElement;
+        content.removeAttribute('data-print-key');
+        item.append(content);
       }
-      if (contributionList) {
-        contributionList.dataset.printSelected = hasSelectedContribution ? 'true' : 'false';
-      }
-      company.dataset.printSelected = hasSelectedProject || hasSelectedContribution ? 'true' : 'false';
+
+      printDocument.append(item);
     });
-
-    const experienceSection = document.querySelector<HTMLElement>('#resume-experience');
-    const personalProjectSection = document.querySelector<HTMLElement>(
-      '#resume-personal-project',
-    );
-
-    if (experienceSection) {
-      experienceSection.dataset.printSelected = document.querySelector(
-        '[data-print-company][data-print-selected="true"]',
-      )
-        ? 'true'
-        : 'false';
-    }
-    if (personalProjectSection) {
-      personalProjectSection.dataset.printSelected = personalProjectSection.querySelector(
-        '[data-print-key][data-print-selected="true"]',
-      )
-        ? 'true'
-        : 'false';
-    }
   };
 
   try {
-    const savedSelection = JSON.parse(
-      localStorage.getItem(PRINT_SELECTION_STORAGE_KEY) ?? 'null',
+    const savedBuilder = JSON.parse(localStorage.getItem(PRINT_BUILDER_STORAGE_KEY) ?? 'null');
+    const legacySelection = JSON.parse(
+      localStorage.getItem(LEGACY_PRINT_SELECTION_STORAGE_KEY) ?? 'null',
     );
-    if (Array.isArray(savedSelection)) {
-      const availableKeys = new Set(printCheckboxes.map((checkbox) => checkbox.value));
-      const validSelection = savedSelection.filter(
-        (key): key is string => typeof key === 'string' && availableKeys.has(key),
+    const availableKeys = new Set(printCheckboxes.map((checkbox) => checkbox.value));
+    const savedSelection = Array.isArray(savedBuilder?.selectedKeys)
+      ? savedBuilder.selectedKeys
+      : legacySelection;
+    const validSelection = Array.isArray(savedSelection)
+      ? savedSelection.filter(
+          (key): key is string => typeof key === 'string' && availableKeys.has(key),
+        )
+      : null;
+
+    if (Array.isArray(savedBuilder?.order)) {
+      setPrintOrder(
+        savedBuilder.order.filter((key: unknown): key is string => typeof key === 'string'),
       );
-      setPrintSelection(validSelection);
+    }
+
+    if (validSelection) {
+      setPrintSelection(validSelection, false);
     } else {
       updatePrintSelectionState(false);
     }
@@ -424,6 +554,7 @@ const corePrintKeys = [
 
   configurePrintButton?.addEventListener('click', () => {
     printSelectionBeforeDialog = getSelectedPrintKeys();
+    printOrderBeforeDialog = getPrintOrder();
     if (printDialog) printDialog.returnValue = 'cancel';
     updatePrintSelectionState(false);
     printDialog?.showModal();
@@ -435,7 +566,8 @@ const corePrintKeys = [
 
   printDialog?.addEventListener('close', () => {
     if (printDialog.returnValue !== 'print') {
-      setPrintSelection(printSelectionBeforeDialog);
+      setPrintOrder(printOrderBeforeDialog);
+      setPrintSelection(printSelectionBeforeDialog, false);
     }
   });
 
@@ -464,15 +596,66 @@ const corePrintKeys = [
     });
   });
 
+  const getPrintOption = (target: EventTarget | null) =>
+    target instanceof Element ? target.closest<HTMLLIElement>('.resume-print-option') : null;
+
+  printOptionList?.addEventListener('dragstart', (event) => {
+    const option = getPrintOption(event.target);
+    if (!option || option.dataset.printSelected !== 'true') {
+      event.preventDefault();
+      return;
+    }
+
+    draggedPrintOption = option;
+    option.classList.add('is-dragging');
+    event.dataTransfer?.setData('text/plain', option.dataset.printKey ?? '');
+    if (event.dataTransfer) event.dataTransfer.effectAllowed = 'move';
+  });
+
+  printOptionList?.addEventListener('dragover', (event) => {
+    if (!draggedPrintOption || !printOptionList) return;
+    event.preventDefault();
+
+    const target = getPrintOption(event.target);
+    if (!target || target === draggedPrintOption) {
+      if (!target) printOptionList.append(draggedPrintOption);
+      return;
+    }
+
+    const targetBounds = target.getBoundingClientRect();
+    if (event.clientY < targetBounds.top + targetBounds.height / 2) target.before(draggedPrintOption);
+    else target.after(draggedPrintOption);
+  });
+
+  printOptionList?.addEventListener('dragend', () => {
+    if (!draggedPrintOption) return;
+    draggedPrintOption.classList.remove('is-dragging');
+    draggedPrintOption = null;
+    updatePrintSelectionState(false);
+  });
+
+  printOptionList?.addEventListener('click', (event) => {
+    const button = event.target instanceof Element
+      ? event.target.closest<HTMLButtonElement>('[data-print-move]')
+      : null;
+    const option = getPrintOption(event.target);
+    if (!button || !option || option.dataset.printSelected !== 'true') return;
+
+    const move = button.dataset.printMove;
+    if (move === 'up' && option.previousElementSibling) option.previousElementSibling.before(option);
+    if (move === 'down' && option.nextElementSibling) option.nextElementSibling.after(option);
+    updatePrintSelectionState(false);
+  });
+
   printConfirmButton?.addEventListener('click', () => {
     if (getSelectedPrintKeys().length === 0) return;
     updatePrintSelectionState();
-    applyPrintSelection();
+    buildPrintDocument();
     printDialog?.close('print');
     window.setTimeout(() => window.print(), 50);
   });
 
-  window.addEventListener('beforeprint', applyPrintSelection);
+  window.addEventListener('beforeprint', buildPrintDocument);
 
   const resumeSections = Array.from(
     document.querySelectorAll<HTMLElement>('[data-resume-section]'),

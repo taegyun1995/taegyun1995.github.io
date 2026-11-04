@@ -5,7 +5,7 @@ export const RESUME = {
   summary:
     'Java와 Spring을 중심으로 운영 서비스의 데이터 정합성, 조회 성능, 비동기 처리 문제를 해결해 왔습니다. 기능 구현에 그치지 않고 실패 시 남는 상태와 운영 환경의 제약까지 함께 고려합니다.',
   resumeSummary:
-    'Java와 Spring을 중심으로 결제 데이터 정합성, 외부 시스템 연동, 조회 성능 문제를 해결해 온 3년차 백엔드 개발자입니다. 기술을 선택할 때 구현 편의보다 실패 시 남는 상태와 운영 환경의 제약을 함께 고려합니다.',
+    '결제와 외부 시스템이 맞물리는 서비스에서 데이터 정합성과 실패 복구 흐름을 설계해 온 3년차 백엔드 개발자입니다. Java/Spring으로 트랜잭션·동시성·재시도를 다루고, 운영 데이터를 근거로 병목을 개선합니다.',
   contacts: [
     {
       label: 'Email',
@@ -30,27 +30,22 @@ export const RESUME = {
       role: '선임연구원',
       period: '2025.08 - 현재',
       description:
-        '글로벌 치과 교정 플랫폼의 코어 API를 개발하며 결제, 외부 시스템 연동과 주요 도메인 개선을 담당하고 있습니다.',
+        '글로벌 치과 교정 플랫폼 ODS의 Java/Spring 백엔드를 개발합니다. 결제·물류·생산 흐름, 환자 공정 도메인과 사용자·관리자 운영 API를 담당했습니다.',
       additionalContributions: [
         {
-          title: '관리자·사용자 채팅 API 구축',
+          title: '관리자·사용자 통합 채팅 API',
           description:
-            '채팅방·메시지 모델을 설계하고 읽음 상태, 파일 첨부, 검색·페이징과 접근 권한을 포함한 API를 구현했습니다.',
+            '채팅방 생성·검색·목록, 메시지 전송·조회, 읽음 처리, 파일 첨부와 권한 검증을 구현하고 뷰어 채팅을 환자 단위로 통합했습니다.',
         },
         {
-          title: '콘텐츠·알림 다국어 기반 구축',
+          title: '콘텐츠·알림 다국어 기반',
           description:
-            '콘텐츠별 번역 모델과 언어 선택 규칙을 구현하고 이메일·SMS 알림에 같은 다국어 기준을 적용했습니다.',
+            '언어별 콘텐츠 모델과 언어 선택·대체 규칙을 구현하고 이메일·SMS 알림 및 주요 운영 콘텐츠에 다국어 기준을 적용했습니다.',
         },
         {
-          title: '레거시 정리와 도메인 경계 재구성',
+          title: '조회·운영 도구 경량화',
           description:
-            '사용하지 않는 API·테이블을 단계적으로 제거하고 주요 도메인을 모듈러 모놀리스 구조로 이전했습니다.',
-        },
-        {
-          title: '조회·엑셀 처리 경량화',
-          description:
-            'JPA 조회를 프로젝션 중심으로 개선하고 SXSSFWorkbook 기반 공정 현황 다운로드를 안정화했습니다.',
+            'JPA 오버페치 경로를 프로젝션 기반 조회로 바꾸고 SXSSFWorkbook 스트리밍, 다국어 헤더와 최대 행 검증을 적용해 공정 현황 엑셀 다운로드를 안정화했습니다.',
         },
       ],
     },
@@ -96,32 +91,47 @@ export const RESUME = {
     {
       company: '위데이터랩',
       period: '2026.03 - 2026.05',
-      title: 'PortOne 기반 국내외 결제 시스템 구축',
+      title: 'PortOne 국내외 결제 통합 및 정합성 강화',
       context: '위데이터랩 · ODS',
       description:
-        '국내·해외 PG 연동 구조를 통합하고 외부 결제 상태와 내부 DB 상태의 정합성을 보강했습니다.',
+        'PortOne EasyPay와 PayPal을 연동하고 외부 결제 상태와 ODS 주문·결제 상태가 어긋나지 않도록 결제 수명 주기와 실패 흐름을 재설계했습니다.',
       highlights: [
-        'PG별 응답을 매핑 계층과 공통 결제 DTO로 분리해 결제 도메인의 외부 API 의존성을 낮췄습니다.',
-        'TransactionTemplate로 외부 호출과 DB 트랜잭션을 분리하고 금액·통화 검증과 보상 취소를 구현했습니다.',
-        '비관적 락과 결제 상태 재검증으로 검증 API와 중복 웹훅의 동시 처리를 멱등하게 구성했습니다.',
+        'EasyPay V1 클라이언트와 PayPal V2 연동을 결제 도메인에서 분리해 PG별 요청·응답 차이를 매핑 계층에 격리했습니다.',
+        '외부 PG 호출과 DB 트랜잭션을 분리하고 금액·통화·결제 소유권 검증 및 실패 시 보상 취소를 구현했습니다.',
+        'PayPal 웹훅 서명 검증, EasyPay·PayPal 이벤트 멱등성, 비관적 락과 상태 재검증으로 중복·동시 처리를 방어하고 MDC 추적 정보를 전파했습니다.',
       ],
-      keywords: ['TransactionTemplate', 'JPA Lock', 'Webhook', 'Idempotency'],
+      keywords: ['PortOne', 'EasyPay', 'PayPal', 'TransactionTemplate', 'JPA Lock', 'Webhook', 'MDC'],
       href: '/portfolio/#payment-consistency',
     },
     {
       company: '위데이터랩',
-      period: '2025.09 - 2026.03',
-      title: '물류·생산 외부 시스템 인터페이스 구축',
+      period: '2025.09 - 현재',
+      title: 'GoodsFlow·MES 물류·생산 시스템 연동',
       context: '위데이터랩 · ODS',
       description:
-        '배송·생산 API를 내부 공정 상태와 연결하고 웹훅·재시도를 포함한 양방향 연동 흐름을 구축했습니다.',
+        '주문 이후 출고·배송·생산 흐름을 ODS 공정 상태와 GoodsFlow·MES에 연결하고 요청·콜백·재시도를 포함한 운영 경로를 개발했습니다.',
       highlights: [
-        '외부 시스템별 요청·응답 매핑과 상태 정의를 내부 공정 모델에서 분리했습니다.',
-        '배송 추적 웹훅과 조회 재시도, 생산 계획 전송·상태 콜백 API를 구현했습니다.',
-        '외부 계약·출고지 정보의 DB 동기화와 비정상 콜백 방어 로직을 구성했습니다.',
+        'GoodsFlow 계약·출고지·배송 등록·송장·추적 API를 연동하고 웹훅, 조회 재시도, 배송 이력과 주소 스냅샷 처리를 구현했습니다.',
+        'MES 생산계획 전송·상태 콜백을 구현하고 쉘 단위 스테이지·스텝 규격을 정리해 외부 생산 상태를 내부 공정에 반영했습니다.',
+        '외부 응답과 공정 상태 경계를 분리하고 추적 로그·검증·재시도 흐름을 보강해 배송·생산 진행 상황을 운영 화면에서 확인할 수 있게 했습니다.',
       ],
-      keywords: ['WebClient', 'Webhook', 'Retry', 'State Mapping'],
+      keywords: ['GoodsFlow', 'MES', 'WebClient', 'Webhook', 'Retry', 'State Mapping'],
       href: '/portfolio/#external-integrations',
+    },
+    {
+      company: '위데이터랩',
+      period: '2025.12 - 2026.10',
+      title: 'ODS 공정 모델 V2 전환과 도메인 모듈화',
+      context: '위데이터랩 · ODS',
+      description:
+        '추가 공정을 독립된 생명주기로 다루도록 모델과 API를 전환하고, 레거시 구조를 정리하면서 여러 백엔드 도메인을 모듈러 모놀리스로 이전했습니다.',
+      highlights: [
+        'DPAT·Retainer·Refinement 공정의 요구사항과 상태 흐름을 정리하고 V2 엔티티·API·DB 마이그레이션을 구현했습니다.',
+        '접수·보증·치료계획서·쉘 디자인·생산 API에서 공정 유형별 진입 조건과 상태 처리를 분리했습니다.',
+        '파일·병원·지역·계약 등 여러 도메인의 경계를 모듈러 모놀리스 패키지로 옮기고 사용하지 않는 V1 API·엔티티·테이블을 정리했습니다.',
+      ],
+      keywords: ['Domain Modeling', 'Modular Monolith', 'Spring Boot', 'JPA', 'Flyway'],
+      href: '/portfolio/#process-modernization',
     },
     {
       company: '지오아이티',
@@ -135,7 +145,7 @@ export const RESUME = {
         '날짜 조건과 복합 인덱스 순서를 재설계하고 데이터 가공 책임을 애플리케이션으로 분리해 조회 시간을 99.25% 줄였습니다.',
       ],
       keywords: ['PostgreSQL', 'Explain Plan', 'Composite Index'],
-      href: '/portfolio/#additional-work',
+      href: '/portfolio/#query-performance',
     },
   ],
   personalProjects: [

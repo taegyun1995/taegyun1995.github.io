@@ -1,6 +1,6 @@
 export const PORTFOLIO = {
   summary:
-    '이력서의 핵심 프로젝트를 기준으로 결제 정합성, 외부 시스템 연동, 조회 성능 문제를 해결한 과정을 정리했습니다. 맡았던 기능보다 문제를 어떻게 확인하고 어떤 기준으로 구현했는지에 초점을 두었습니다.',
+    '결제 정합성, 물류·생산 연동, 공정 모델 전환과 조회 성능 개선을 중심으로 운영 시스템의 문제를 해결한 과정을 정리했습니다. 문제를 확인한 근거와 구현 기준, 실제로 바뀐 구조를 담았습니다.',
   cases: [
     {
       id: 'payment-consistency',
@@ -8,45 +8,69 @@ export const PORTFOLIO = {
       navLabel: '결제 정합성',
       context: '위데이터랩 · ODS',
       period: '2026.03 - 2026.05',
-      title: '국내외 결제 연동과 데이터 정합성 강화',
+      title: 'PortOne EasyPay·PayPal 결제 연동과 데이터 정합성 강화',
       summary:
-        '결제망마다 다른 응답과 웹훅 규칙을 공통 결제 모델로 격리하고, 외부 결제 상태와 내부 DB 상태가 어긋나지 않도록 실패 흐름을 재설계했습니다.',
+        'EasyPay V1과 PayPal V2를 ODS 결제 흐름에 연결하고, PG별 응답과 웹훅 차이를 분리해 외부 결제 상태와 내부 주문 상태의 정합성을 보강했습니다.',
       problem:
         '외부에서는 결제가 완료됐지만 내부 처리가 롤백되는 경우와, 검증 API와 중복 웹훅이 같은 주문을 동시에 처리하는 경우를 함께 다뤄야 했습니다.',
       contributions: [
-        '결제망별 응답을 매퍼와 공통 결제 DTO 뒤로 격리했습니다.',
+        'EasyPay 클라이언트와 PayPal V2 연동을 결제 도메인에서 분리하고, PG별 요청·응답을 매핑 계층과 공통 DTO로 정리했습니다.',
         'TransactionTemplate로 DB 작업만 짧게 묶고 외부 API 호출은 트랜잭션 밖으로 분리했습니다.',
-        '금액·통화 교차 검증, 보상 취소, 비관적 락과 결제 상태 재확인으로 멱등성을 구성했습니다.',
-        'MDC를 요청·비동기 실행·WebClient 구간에 전파하고 주요 실패 시나리오를 테스트로 고정했습니다.',
+        '금액·통화·결제 소유권을 검증하고 실패 시 보상 취소를 적용해 외부 결제 성공 후 내부 저장이 실패하는 상황을 처리했습니다.',
+        'PayPal 웹훅 서명 검증, EasyPay·PayPal 이벤트 멱등성, 비관적 락과 결제 상태 재확인으로 중복·동시 처리를 방어했습니다.',
+        'MDC를 요청·비동기 실행·WebClient 구간에 전파하고 주요 결제 실패 시나리오를 통합 테스트로 고정했습니다.',
       ],
       result:
         '결제 제공자가 추가되어도 도메인 처리와의 경계를 유지할 수 있게 됐고, 중복 처리와 외부·내부 상태 불일치를 예방하는 기준을 명확히 만들었습니다.',
-      keywords: ['Java', 'Spring Boot', 'TransactionTemplate', 'JPA Lock', 'Webhook', 'MDC'],
+      keywords: ['Java', 'Spring Boot', 'PortOne', 'EasyPay', 'PayPal', 'TransactionTemplate', 'JPA Lock', 'Webhook', 'MDC'],
     },
     {
       id: 'external-integrations',
       number: '02',
-      navLabel: '외부 시스템 연동',
+      navLabel: 'GoodsFlow·MES 연동',
       context: '위데이터랩 · ODS',
-      period: '2025.09 - 2026.03',
-      title: '물류·생산 외부 시스템 연동',
+      period: '2025.09 - 현재',
+      title: 'GoodsFlow·MES 기반 물류·생산 흐름 연동',
       summary:
-        '주문 이후의 출고·배송·생산 흐름을 외부 시스템과 연결하고, 웹훅과 재시도를 포함한 운영 시나리오를 구성했습니다.',
+        '주문 이후 출고·배송·생산 흐름을 GoodsFlow와 MES에 연결하고, 외부 상태를 ODS 공정에 반영하는 요청·콜백 경로를 구현했습니다.',
       problem:
         '외부 시스템별로 API 규격과 상태 정의가 달랐고, 요청 성공만으로는 실제 물류·생산 상태를 확정할 수 없었습니다. 콜백 누락과 일시적 통신 실패도 고려해야 했습니다.',
       contributions: [
-        '로컬·운영 환경의 외부 클라이언트를 분리하고 요청·응답 매핑 경계를 정리했습니다.',
-        '배송 등록·송장·추적과 생산 계획 전송 API를 도메인 상태 변경과 연결했습니다.',
-        '실시간 상태 웹훅, 배송 조회 재시도, 계약·출고지 정보의 DB 동기화를 구현했습니다.',
-        '외부 콜백의 비정상 데이터를 방어하고 주요 구간에 추적 로그를 보강했습니다.',
+        'GoodsFlow 계약·출고지·배송 등록·송장 출력·배송 추적 API를 연동하고 로컬·운영 환경의 클라이언트를 분리했습니다.',
+        '계약·출고지 정보를 DB와 동기화하고 수취 주소 스냅샷과 배송 이력을 저장해 배송 상태를 추적할 수 있게 했습니다.',
+        '배송 웹훅과 조회 재시도, 비정상 콜백 검증을 구현하고 외부 응답과 ODS 공정 상태의 경계를 분리했습니다.',
+        'MES 생산계획 전송·상태 콜백을 연동하고 쉘 단위 스테이지·스텝 규격과 공정별 payload를 정리했습니다.',
+        '추적 로그와 운영 조회 흐름을 보강해 배송·생산 단계의 상태를 관리 화면에서 확인하고, 일시적인 통신 실패는 재시도 경로로 보완했습니다.',
       ],
       result:
-        '외부 시스템의 응답과 내부 공정 상태를 직접 결합하지 않고, 재시도·웹훅·동기화 경계를 나눠 운영 중 복구 가능성을 높였습니다.',
-      keywords: ['WebClient', 'Webhook', 'Retry', 'State Mapping', 'Integration Test'],
+        '외부 요청의 성공 여부만으로 내부 공정을 완료 처리하지 않고, 웹훅·재조회·이력 동기화로 실제 배송·생산 상태를 확인하는 흐름을 만들었습니다.',
+      keywords: ['GoodsFlow', 'MES', 'WebClient', 'Webhook', 'Retry', 'State Mapping', 'Integration Test'],
+    },
+    {
+      id: 'process-modernization',
+      number: '03',
+      navLabel: '공정 V2·도메인 전환',
+      context: '위데이터랩 · ODS',
+      period: '2025.12 - 2026.10',
+      title: '환자 공정 V2 전환과 백엔드 도메인 모듈화',
+      summary:
+        'DPAT·Retainer·Refinement 등 추가 공정을 독립된 생명주기로 전환하고, 여러 레거시 도메인을 모듈러 모놀리스 구조로 이전했습니다.',
+      problem:
+        '공정 유형마다 접수·보증·치료계획·생산 흐름이 달랐지만 기존 구조에는 공통 BASIC 경로와 V1 Before 엔티티·API가 함께 남아 있었습니다. 공정 유형별 상태를 유지하면서 레거시 의존을 단계적으로 걷어낼 필요가 있었습니다.',
+      contributions: [
+        'DPAT·Retainer·Refinement 공정의 요구사항과 생명주기를 정리하고 V2 엔티티, 사용자·관리자 API, DB 마이그레이션을 구현했습니다.',
+        '접수 진입 조건, 보증 횟수, 치료계획서, 쉘 디자인과 생산계획 API를 공정 유형별 상태 흐름에 맞게 분리했습니다.',
+        '기본 공정에 조건문으로 누적되던 추가 공정을 전용 모델로 옮기고, 주요 상태 전이를 API와 통합 테스트로 검증했습니다.',
+        '파일·병원·지역·계약·FAQ·공지 등 여러 도메인을 모듈러 모놀리스 패키지 경계로 이전했습니다.',
+        'V1 Before API·엔티티·테이블을 단계적으로 정리해 레거시와 신규 공정 모델이 함께 남는 범위를 줄였습니다.',
+      ],
+      result:
+        '추가 공정의 데이터 모델과 생명주기를 BASIC 공정과 분리하고, 여러 백엔드 도메인의 소유 경계를 코드 구조에 반영했습니다. 기능 이전과 레거시 제거를 데이터 마이그레이션으로 나누어 진행했습니다.',
+      keywords: ['Java', 'Spring Boot', 'JPA', 'Flyway', 'Domain Modeling', 'Modular Monolith', 'Integration Test'],
     },
     {
       id: 'query-performance',
-      number: '03',
+      number: '04',
       navLabel: '조회 성능 개선',
       context: '지오아이티 · 운영 서비스',
       period: '2024.04 - 2024.05',
@@ -76,24 +100,10 @@ export const PORTFOLIO = {
     },
     {
       context: '위데이터랩 · ODS',
-      title: '복수 공정 도메인 V2 전환',
-      description:
-        '기본 공정의 조건문으로 확장되던 추가 공정을 전용 모델로 분리하고 진입 조건, 보증, 상태 전이를 API와 테스트로 이전했습니다.',
-      keywords: ['Domain Modeling', 'JPA', 'Flyway', 'Integration Test'],
-    },
-    {
-      context: '위데이터랩 · ODS',
       title: '콘텐츠·알림 다국어 기반 구축',
       description:
         '콘텐츠별 번역 모델과 언어 선택 규칙을 구현하고 동일한 기준을 이메일·SMS 알림까지 적용했습니다.',
       keywords: ['i18n', 'Locale Resolver', 'JPA', 'Validation'],
-    },
-    {
-      context: '위데이터랩 · ODS',
-      title: '레거시 정리와 도메인 경계 재구성',
-      description:
-        '사용하지 않는 API·테이블을 단계적으로 제거하고 주요 도메인을 모듈러 모놀리스 구조로 이전했습니다.',
-      keywords: ['Modular Monolith', 'Flyway', 'JaCoCo', 'Refactoring'],
     },
     {
       context: '위데이터랩 · ODS',

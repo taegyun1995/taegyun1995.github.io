@@ -7,11 +7,11 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 const posts = await getPublishedPosts();
 ---
 
-<BaseLayout title="전체 글" description="백엔드 개발 과정에서 배운 내용을 시간순으로 모았습니다.">
+<BaseLayout title="기록" description="백엔드 기술 글과 개발 회고를 시간순으로 모았습니다.">
   <header class="page-header page-container">
-    <p class="section-kicker">Archive</p>
-    <h1>전체 글</h1>
-    <p>구현, 문제 해결, CS 공부와 개발 회고를 시간순으로 모았습니다.</p>
+    <p class="section-kicker">Writing & Retrospective</p>
+    <h1>기술 글과 개발 회고</h1>
+    <p>구현과 문제 해결, 공부한 내용과 일하며 배운 점을 기록합니다.</p>
   </header>
 
   <div class="page-container">
@@ -22,6 +22,6 @@ const posts = await getPublishedPosts();
         return <a href={`/categories/${category.slug}/`}>{category.name} <span>{count}</span></a>;
       })}
     </nav>
-    <PostList posts={posts} />
+    <PostList posts={posts} emptyMessage="첫 기술 글과 회고를 준비하고 있습니다." />
   </div>
 </BaseLayout>

@@ -1,6 +1,6 @@
 export const SITE = {
   title: 'Taegyun.log',
-  description: 'Java와 Spring을 중심으로 운영 문제를 해결해 온 백엔드 개발자 이태균의 기록입니다.',
+  description: '백엔드 개발자 이태균의 이력서와 포트폴리오, 기술 글과 개발 회고를 담은 개인 사이트입니다.',
   author: '이태균',
   role: 'Backend Engineer',
   url: 'https://taegyun1995.github.io',
