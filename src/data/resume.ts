@@ -106,16 +106,16 @@ export const RESUME = {
     {
       company: '위데이터랩',
       period: '2025.09 - 현재',
-      title: 'GoodsFlow·MES 물류·생산 시스템 연동',
+      title: 'ODS 외부 시스템 연동 (PG·GoodsFlow·MES)',
       context: '위데이터랩 · ODS',
       description:
-        '주문 이후 출고·배송·생산 흐름을 ODS 공정 상태와 GoodsFlow·MES에 연결하고 요청·콜백·재시도를 포함한 운영 경로를 개발했습니다.',
+        'PortOne, GoodsFlow, MES를 ODS의 결제·배송·생산 흐름에 연결하고 시스템별 API와 상태 규격을 내부 도메인에 맞게 매핑했습니다.',
       highlights: [
-        'GoodsFlow 계약·출고지·배송 등록·송장·추적 API를 연동하고 웹훅, 조회 재시도, 배송 이력과 주소 스냅샷 처리를 구현했습니다.',
-        'MES 생산계획 전송·상태 콜백을 구현하고 쉘 단위 스테이지·스텝 규격을 정리해 외부 생산 상태를 내부 공정에 반영했습니다.',
-        '외부 응답과 공정 상태 경계를 분리하고 추적 로그·검증·재시도 흐름을 보강해 배송·생산 진행 상황을 운영 화면에서 확인할 수 있게 했습니다.',
+        'PortOne EasyPay·PayPal을 결제 흐름에 연결하고 PG별 API 계약을 분리했습니다. 결제 검증·멱등성·실패 처리는 별도 결제 정합성 사례로 정리했습니다.',
+        'GoodsFlow 출고·송장·추적 API와 웹훅을 연동하고 배송 이력, 주소 스냅샷, 추적 재시도를 구현했습니다.',
+        'MES 생산계획과 상태 콜백을 연동하고 쉘 단위 Stage/Step·PairShell 규격을 적용해 생산 상태를 ODS 공정에 반영했습니다.',
       ],
-      keywords: ['GoodsFlow', 'MES', 'WebClient', 'Webhook', 'Retry', 'State Mapping'],
+      keywords: ['PortOne', 'GoodsFlow', 'MES', 'WebClient', 'Webhook', 'State Mapping'],
       href: '/portfolio/#external-integrations',
     },
     {
